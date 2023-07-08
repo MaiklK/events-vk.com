@@ -1,24 +1,54 @@
 package web.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 public class Event {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_event")
-    private int id;
-
+    @SequenceGenerator(name = "seq_event", allocationSize = 1)
+    private long id;
     @Column(name = "name")
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 40 знаков")
     private String name;
+    @Column(name = "id_event")
+    private String eventId;
 
-    public Event() {}
+    public Event() {
+    }
 
-    public int getId() { return id; }
+    public Event(String name, String idEvent) {
+        this.name = name;
+        this.eventId = idEvent;
+    }
 
-    public String getName() { return name; }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public long getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String idEvent) {
+        this.eventId = idEvent;
+    }
 }

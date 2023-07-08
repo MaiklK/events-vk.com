@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Все события</title>
+</head>
+<body>
+<h1>События: </h1>
+<th:block th:each="event:  ${events}">
+    <h2>
+    <a th:href="@{/event/{id}(id=${event.getId()})}" th:text="${event.getId()}
+     + ')  ' + ${event.getName()} + ' ' + ${event.getEventId()}"/>
+    <br>
+    </h2>
+</th:block>
+<br>
+<a th:href="@{event/new}">
+    <input style="color: black" type="button" value="Добавить новое событие"/>
+</a>
+</body>
+</html>
+

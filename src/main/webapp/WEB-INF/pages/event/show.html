@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Событие</title>
+</head>
+<body>
+<h2>
+    <p th:text="'ID:    ' + ${event.getId()}"/>
+    <p th:text="'Имя:    ' + ${event.getName()}"/>
+    <p th:text="'Id мероприятия:    ' + ${event.getEventId()}"/>
+<br>
+</h2>
+<a th:href="@{/event/{id}/edit(id=${event.getId()})}">
+    <input style="color: black" type="button" value="Редактировать событие">
+</a>
+<form th:method="DELETE" th:action="@{/event/{id}(id=${event.getId()})}">
+    <input style="color: black" type="submit" value="Удалить">
+</form>
+</body>
+</html>

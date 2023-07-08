@@ -25,6 +25,7 @@ public class DatabaseConfig {
 
     private final Environment env;
 
+    @Autowired
     public DatabaseConfig(Environment env) {
         this.env = env;
     }

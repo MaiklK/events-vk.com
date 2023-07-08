@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление события</title>
+</head>
+<body>
+<h1>Создание мероприятия</h1>
+<form th:method="POST" th:action="@{/event}" th:object="${event}">
+    <label for="name">Введите имя мероприятия:</label>
+    <input type="text" th:field="*{name}" id="name">
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</div>
+    <br>
+    <label for="event_id">Введите id мероприятия:</label>
+    <input type="text" th:field="*{eventId}" id="event_id">
+    <div style="color:red" th:if="${#fields.hasErrors('eventId')}" th:errors="*{eventId}">Error</div>
+    <br><br>
+    <input style="color: black" type="submit" value="Создать мероприятие"/>
+</form>
+</body>
+</html>
+

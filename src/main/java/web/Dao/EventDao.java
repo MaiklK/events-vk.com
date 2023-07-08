@@ -7,6 +7,8 @@ import java.util.List;
 public interface EventDao {
 
     void addEvent(Event event);
-    Event getEvent(int id);
+    Event getEvent(long id);
     List<Event> getAllEvents();
+    void update(Event event, long id);
+    void delete(long id);
 }

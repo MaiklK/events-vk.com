@@ -19,12 +19,23 @@ public class EventDaoImp implements EventDao {
     }
 
     @Override
-    public Event getEvent(int id) {
+    public Event getEvent(long id) {
         return entityManager.find(Event.class, id);
     }
 
     @Override
     public List<Event> getAllEvents() {
         return entityManager.createQuery("from Event ", Event.class).getResultList();
+    }
+
+    @Override
+    public void update(Event event, long id) {
+        event.setId(id);
+        entityManager.merge(event);
+    }
+
+    @Override
+    public void delete(long id) {
+        entityManager.remove(getEvent(id));
     }
 }
