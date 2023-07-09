@@ -36,7 +36,7 @@ public class EventServiceImp implements EventService {
 
     @Override
     public void update(Event event, long id) {
-        eventDao.update(event, id);
+        eventDao.update(id, event);
     }
 
     @Override

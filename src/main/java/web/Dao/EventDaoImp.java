@@ -29,7 +29,7 @@ public class EventDaoImp implements EventDao {
     }
 
     @Override
-    public void update(Event event, long id) {
+    public void update(long id, Event event) {
         event.setId(id);
         entityManager.merge(event);
     }

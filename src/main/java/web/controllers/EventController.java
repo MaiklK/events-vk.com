@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import web.Model.Event;
@@ -52,8 +53,11 @@ public class EventController {
         return "/event/edit";
     }
 
-    @PatchMapping()
-    public String update(@ModelAttribute("event") @Valid Event event, @PathVariable("id") long id, BindingResult result) {
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("event") @Valid Event event,
+                         ModelMap model, @PathVariable("id") long id,
+                         BindingResult result) {
+        model.addAttribute("event", event);
         if (result.hasErrors()) {
             return "event/edit";
         }

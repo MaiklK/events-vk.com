@@ -9,6 +9,6 @@ public interface EventDao {
     void addEvent(Event event);
     Event getEvent(long id);
     List<Event> getAllEvents();
-    void update(Event event, long id);
+    void update(long id, Event event);
     void delete(long id);
 }
