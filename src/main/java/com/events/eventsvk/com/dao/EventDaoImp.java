@@ -1,9 +1,9 @@
-package web.Dao;
+package com.events.eventsvk.com.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import web.Model.Event;
+import com.events.eventsvk.com.models.Event;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package web.Model;
+package com.events.eventsvk.com.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,6 +17,7 @@ public class Event {
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 40 знаков")
     private String name;
+    @NotEmpty(message = "Id мероприятия не должно быть пустым")
     @Column(name = "id_event")
     private String eventId;
 

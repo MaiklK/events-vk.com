@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>События: </h1>
-<th:block th:each="event:  ${events}">
+<th:block th:each="event: ${events}">
     <h2>
     <a th:href="@{/event/{id}(id=${event.getId()})}" th:text="${event.getId()}
      + ')  ' + ${event.getName()} + ' ' + ${event.getEventId()}"/>

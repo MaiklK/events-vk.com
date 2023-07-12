@@ -1,10 +1,10 @@
-package web.Service;
+package com.events.eventsvk.com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.Dao.EventDao;
-import web.Model.Event;
+import com.events.eventsvk.com.dao.EventDao;
+import com.events.eventsvk.com.models.Event;
 
 import java.util.List;
 
