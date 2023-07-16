@@ -1,4 +1,4 @@
-package com.events.eventsvk.com;
+package com.eventsvk;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

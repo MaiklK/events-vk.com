@@ -5,7 +5,7 @@
     <title>Редактирование</title>
 </head>
 <body>
-<form th:method="PATCH" th:action="@{/event/{id}(id=${event.getId()})}" th:object="${event}">
+<form th:method="PATCH" th:action="@{/events/{id}(id=${event.getId()})}" th:object="${event}">
     <label for="name">Введите название мероприятия: </label>
     <input type="text" th:field="*{name}" id="name">
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</div>

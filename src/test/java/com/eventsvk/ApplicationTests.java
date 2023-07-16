@@ -1,4 +1,4 @@
-package com.events.eventsvk.com;
+package com.eventsvk;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

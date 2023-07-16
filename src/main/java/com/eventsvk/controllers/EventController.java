@@ -1,5 +1,7 @@
-package com.events.eventsvk.com.controllers;
+package com.eventsvk.controllers;
 
+import com.eventsvk.models.Event;
+import com.eventsvk.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,50 +9,53 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.events.eventsvk.com.models.Event;
-import com.events.eventsvk.com.service.EventService;
 
 @Controller
-@RequestMapping("/event")
+@RequestMapping("/events")
 public class EventController {
 
-    private final EventService service;
+    private final EventService eventService;
 
     @Autowired
     public EventController(EventService service) {
-        this.service = service;
+        this.eventService = service;
     }
 
     @GetMapping()
-    public String getAllEvents(ModelMap model) {
-        model.addAttribute("events", service.getAllEvents());
-        return "event/index";
+    public String getAllEvents(Model model) {
+//        if (bool){
+//            eventService.clearEventTable();
+//            eventService.restartSequenceEvent();
+//            return "redirect:/events";
+//        }
+        model.addAttribute("events", eventService.findAllEvents());
+        return "events/index";
     }
 
     @GetMapping("/{id}")
     public String showEvent(@PathVariable long id, Model model) {
-        model.addAttribute("event", service.getEvent(id));
-        return "event/show";
+        model.addAttribute("event", eventService.findEventById(id));
+        return "events/event";
     }
 
     @GetMapping("/new")
     public String getNewEventPage(@ModelAttribute("event") Event event) {
-        return "event/new";
+        return "events/new";
     }
 
-    @PostMapping()
+    @PostMapping("/new")
     public String addEvent(@ModelAttribute("event") @Valid Event event, BindingResult result) {
         if (result.hasErrors()){
-            return "event/new";
+            return "events/new";
         }
-        service.addEvent(event);
-        return "redirect:event";
+        eventService.saveEvent(event);
+        return "redirect:/events";
     }
 
     @GetMapping("/{id}/edit")
     public String getUpdateEventPage(Model model, @PathVariable("id") long id) {
-        model.addAttribute("event", service.getEvent(id));
-        return "/event/edit";
+        model.addAttribute("event", eventService.findEventById(id));
+        return "/events/edit";
     }
 
     @PatchMapping("/{id}")
@@ -59,16 +64,22 @@ public class EventController {
                          BindingResult result) {
         model.addAttribute("event", event);
         if (result.hasErrors()) {
-            return "event/edit";
+            return "events/edit";
         }
-        service.update(event, id);
-        return "redirect:/event";
+        eventService.updateEvent(event, id);
+        return "redirect:/events";
     }
 
     @DeleteMapping("/{id}")
     public String deleteEvent(@PathVariable("id") long id) {
-        service.delete(id);
-        return "redirect:/event";
+        eventService.deleteEvent(id);
+        return "redirect:/events";
     }
 
+    @PutMapping()
+    public String clearEventTable() {
+        eventService.clearEventTable();
+        eventService.restartSequenceEvent();
+        return "redirect:/events";
+    }
 }

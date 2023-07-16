@@ -1,4 +1,4 @@
-package com.events.eventsvk.com.models;
+package com.eventsvk.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
