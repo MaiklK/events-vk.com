@@ -12,8 +12,8 @@ services:
      POSTGRES_USER: postgres
      PGDATA: /var/lib/postgresql/data
 
-#  rest_vc_web:
-#    image: web_vc_rest:latest
+#  events-vk.com:
+#    image: events-vk.com:latest
 #    ports:
 #      - 8080:8080
 #    environment:
