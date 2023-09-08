@@ -1,6 +1,6 @@
-package ru.maiklk.bootstrap.repositories;
+package com.eventsvk.repositories;
 
-import ru.maiklk.bootstrap.model.Role;
+import com.eventsvk.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {

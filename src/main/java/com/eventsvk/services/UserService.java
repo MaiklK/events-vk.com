@@ -1,20 +1,21 @@
 package com.eventsvk.services;
 
-import com.eventsvk.models.User;
+import com.eventsvk.entity.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     void saveUser(User user);
 
-    User findUserById(long id);
+    User findUserByVkid(String userVKid);
 
-    List<User> findAllUsers();
+    List<User> getAllUsers();
 
-    void updateUser(User user, long id);
+    User findUserByUuid(String userUuid);
 
-    void deleteUser(long id);
+    void deleteUser(String userUuid);
 
-    public User findByUsername(String name) throws Exception;
+    User updateUser(User updateUser);
 }

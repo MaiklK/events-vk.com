@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "client-id",
+      "type": "java.lang.String",
+      "description": "Description for client-id."
+    },
+    {
+      "name": "client-secret",
+      "type": "java.lang.String",
+      "description": "Description for client-secret."
+    },
+    {
+      "name": "redirect-uri",
+      "type": "java.lang.String",
+      "description": "Description for redirect-uri."
+    },
+    {
+      "name": "authorization-uri",
+      "type": "java.lang.String",
+      "description": "Description for authorization-uri."
+    },
+    {
+      "name": "scope",
+      "type": "java.lang.String",
+      "description": "Description for scope."
+    }
+  ] }

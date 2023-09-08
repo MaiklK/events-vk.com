@@ -1,7 +1,7 @@
-package ru.maiklk.bootstrap.security;
+package com.eventsvk.security;
 
+import com.eventsvk.entity.User;
 import org.springframework.security.core.GrantedAuthority;
-import ru.maiklk.bootstrap.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -15,12 +15,12 @@ public record CastomUserDetails(User user) implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getVkid();
     }
 
     @Override

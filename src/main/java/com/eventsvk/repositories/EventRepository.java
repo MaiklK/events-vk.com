@@ -1,12 +1,8 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.models.Event;
+import com.eventsvk.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-@EnableJpaRepositories
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaRepository<Event, String> {
+    //TODO создать сущность event создать методы поиска событий по дате и городу
 }

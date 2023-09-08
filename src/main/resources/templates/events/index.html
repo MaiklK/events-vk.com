@@ -1,44 +1,55 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <meta charset="UTF-8">
-    <title>Все события</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <style>
+        table {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            border: 1px solid grey;
+        }
+
+    </style>
+    <title>All events</title>
 </head>
-<body data-th-bgcolor="azure">
-<h1>События: </h1>
-
-    <table border="2" valign="center" align="center" width="70%" data-th-bgcolor="beige">
+<body>
+<h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
+<table border="2" valign="center" align="center" width="70%">
+    <tr>
+        <th>Название мероприятия</th>
+        <th>Id мероприятия</th>
+    </tr>
+    <th:block th:each="event: ${events}">
         <tr>
-            <th>Id </th>
-            <th>Название события </th>
-            <th>Id события </th>
+            <td align="center" th:text="${event.getName()}"/>
+            <td align="center" th:text="${event.getEventId()}"/>
         </tr>
-        <th:block th:each="event: ${events}">
-        <tr>
-            <td th:text="${event.getId()} + ') '"/>
-            <td><a th:href="@{/events/{id}(id=${event.getId()})}" th:text="${event.getName()}"></a></td>
-            <td th:text="${event.getEventId()}"/>
-        </tr>
-        </th:block>
-
-    </table>
-<!--<th:block th:each="event: ${events}">-->
-<!--    <h2>-->
-<!--    <a th:href="@{/events/{id}(id=${event.getId()})}" th:text="${event.getId()}-->
-<!--     + ')  ' + ${event.getName()} + ' ' + ${event.getEventId()}"/>-->
-<!--    <br>-->
-<!--    </h2>-->
-<!--</th:block>-->
-
+    </th:block>
+</table>
 <br>
-<a th:href="@{/events/new}">
-    <input style="color: black" type="button" value="Добавить новое событие"/>
-</a>
 <br>
-
-<form th:method="PUT" th:action="@{/events}">
-    <input style="color: black" type="submit" value="Очистить таблицу">
+<br><br>
+<form action="/logout">
+    <button type="submit">Выйти</button>
 </form>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+        crossorigin="anonymous"></script>
+
 </body>
 </html>
-

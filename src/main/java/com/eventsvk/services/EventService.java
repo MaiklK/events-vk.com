@@ -1,6 +1,6 @@
 package com.eventsvk.services;
 
-import com.eventsvk.models.Event;
+import com.eventsvk.entity.Event;
 
 import java.util.List;
 
@@ -8,17 +8,9 @@ public interface EventService {
 
     void saveEvent(Event event);
 
-    Event findEventById(long id);
+    Event findEventByUuid(String eventUuid);
 
-    List<Event> findAllEvents();
+    List<Event> getAllEvents();
 
-    void updateEvent(Event event, long id);
-
-    void deleteEvent(long id);
-
-    public void deleteEventTable();
-
-    public void clearEventTable();
-
-    public void restartSequenceEvent();
+    void updateEvent(Event event, String eventUuid);
 }

@@ -1,6 +1,6 @@
-package ru.maiklk.bootstrap.services;
+package com.eventsvk.services;
 
-import ru.maiklk.bootstrap.model.Role;
+import com.eventsvk.entity.Role;
 
 import java.util.List;
 

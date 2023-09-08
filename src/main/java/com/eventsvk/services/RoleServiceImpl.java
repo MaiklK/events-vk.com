@@ -1,7 +1,7 @@
-package ru.maiklk.bootstrap.services;
+package com.eventsvk.services;
 
-import ru.maiklk.bootstrap.model.Role;
-import ru.maiklk.bootstrap.repositories.RoleRepository;
+import com.eventsvk.entity.Role;
+import com.eventsvk.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 

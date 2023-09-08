@@ -1,9 +1,9 @@
-package com.example.securingweb.configuration;
+package com.eventsvk.configuration;
 
-import com.example.securingweb.model.Role;
-import com.example.securingweb.model.User;
-import com.example.securingweb.services.RoleService;
-import com.example.securingweb.services.UserService;
+import com.eventsvk.entity.Role;
+import com.eventsvk.services.EventService;
+import com.eventsvk.services.RoleService;
+import com.eventsvk.services.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class Init {
     private final RoleService roleService;
 
     @Autowired
-    public Init(UserService userService, RoleService roleService) {
+    public Init(UserService userService, RoleService roleService, EventService eventService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -38,12 +38,15 @@ public class Init {
 
         roleService.saveRole(userRole);
 
-        User admin = new User("admin", "admin", (byte) 20, "a@a.ru", "admin", adminRoles);
+//        User admin = new User("admin", "admin", (byte) 20, "a@a.ru", "admin", adminRoles);
 
-        userService.saveUser(admin);
+//        userService.saveUser(admin);
 
-        User user = new User("user", "user", (byte) 20, "u@u.ru", "user", userRoles);
+//        User user = new User("user", "user", (byte) 20, "u@u.ru", "user", userRoles);
+//
+//        userService.saveUser(user);
 
-        userService.saveUser(user);
+//        eventService.saveEvent(new Event("EventOne", "12345678"));
+//        eventService.saveEvent(new Event("EventTwo", "87654321"));
     }
 }

@@ -1,7 +1,6 @@
 package com.eventsvk.services;
 
-import com.eventsvk.dao.EventDao;
-import com.eventsvk.models.Event;
+import com.eventsvk.entity.Event;
 import com.eventsvk.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +14,10 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final EventDao eventDao;
 
     @Autowired
-    public EventServiceImpl(EventRepository eventRepository, EventDao eventDao) {
+    public EventServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
-        this.eventDao = eventDao;
     }
 
     @Override
@@ -30,46 +27,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event findEventById(long id) {
-        Optional<Event> foundEvent = eventRepository.findById(id);
+    public Event findEventByUuid(String eventUuid) {
+        Optional<Event> foundEvent = eventRepository.findById(eventUuid);
 
         return foundEvent.orElse(null);
     }
 
     @Override
-    public List<Event> findAllEvents() {
+    public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 
     @Override
     @Transactional
-    public void updateEvent(Event updateEvent, long id) {
-        updateEvent.setId(id);
+    public void updateEvent(Event updateEvent, String eventUuid) {
+        updateEvent.setUuid(eventUuid);
         eventRepository.save(updateEvent);
-    }
-
-    @Override
-    @Transactional
-    public void deleteEvent(long id) {
-        eventRepository.delete(findEventById(id));
-    }
-
-    @Override
-    @Transactional
-    public void deleteEventTable() {
-        eventDao.deleteEventTable();
-    }
-
-    @Override
-    @Transactional
-    public void clearEventTable() {
-        eventDao.clearEventTable();
-    }
-
-    @Transactional
-
-    @Override
-    public void restartSequenceEvent() {
-        eventDao.restartSequenceEvent();
     }
 }
