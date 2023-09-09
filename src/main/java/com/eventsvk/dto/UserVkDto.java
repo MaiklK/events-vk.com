@@ -19,10 +19,14 @@ public class UserVkDto {
     private String birthdayDate;
     @JsonProperty("sex")
     private int sex;
+    @JsonProperty("mobile_phone")
+    private String mobilePhone;
     @JsonProperty("is_closed")
     private boolean isClosed;
     @JsonProperty("photo_id")
     private String photoId;
+    @JsonProperty("photo_big")
+    private String photoBig;
     @JsonProperty("home_phone")
     private String homePhone;
     @JsonProperty("city")

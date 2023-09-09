@@ -73,7 +73,8 @@ public class AuthVkService {
                 Fields.CITY,
                 Fields.COUNTRY,
                 Fields.COUNTERS,
-                Fields.PHOTO_ID
+                Fields.PHOTO_ID,
+                Fields.PHOTO_BIG
 //                Fields.PERSONAL //TODO допилисть сущности и DTO
         );
     }
@@ -94,6 +95,7 @@ public class AuthVkService {
         user.setPassword("pOdk*efjv^21Pdlw90!fB");
         user.setRoles(roles);
         user.setCodeFlow(codeFlow);
+        user.setAccountNonLocked(true);
         return user;
     }
 

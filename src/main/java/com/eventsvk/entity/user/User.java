@@ -4,6 +4,7 @@ import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -32,9 +33,11 @@ public class User implements UserDetails {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+    @Column(name = "mobile_phone")
+    private String mobilePhone;
     @Column
     private String password;
-    @Column
+    @Column(name = "code_flow")
     private String codeFlow;
     @Column(name = "birthday_date")
     private String birthdayDate;
@@ -42,8 +45,12 @@ public class User implements UserDetails {
     private int sex;
     @Column(name = "is_closed")
     private boolean isClosed;
+    @Column(name = "photo_big")
+    private String photoBig;
     @Column(name = "photo_id")
     private String photoId;
+    @Column(name = "is_account_non_locked")
+    private boolean isAccountNonLocked;
 
     @Fetch(FetchMode.JOIN)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

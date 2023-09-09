@@ -1,13 +1,14 @@
 package com.eventsvk.security;
 
 import com.eventsvk.entity.user.User;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Getter
 public class CustomAuthentication implements Authentication {
 
     private Collection<? extends GrantedAuthority> authorities;

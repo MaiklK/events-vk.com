@@ -46,8 +46,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(long userId) {
-        userRepository.deleteById(userId);
+    public void banUser(long userId) {
+        User user = findUserById(userId);
+        user.setAccountNonLocked(false);
+        userRepository.save(user);
     }
 
     @Override

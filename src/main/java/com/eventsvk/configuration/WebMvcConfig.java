@@ -8,12 +8,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class MvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthVkService authVkService;
     public void addViewControllers(ViewControllerRegistry registry) {
 
-        registry.addViewController("/admin").setViewName("admin");
-        registry.addViewController("/login").setViewName("login");
+//        registry.addViewController("/admin").setViewName("admin");
+//        registry.addViewController("/login").setViewName("login");
 //        registry.addViewController("/index").setViewName("index");
         registry.addViewController("login/vk").setViewName("redirect:"
                 + authVkService.getAuthorizationUrl());

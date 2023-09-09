@@ -15,12 +15,12 @@ public record CastomUserDetails(User user) implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getVkid();
+        return this.user.getVkid();
     }
 
     @Override
@@ -30,7 +30,7 @@ public record CastomUserDetails(User user) implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.user.isAccountNonLocked();
     }
 
     @Override

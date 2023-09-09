@@ -4,6 +4,7 @@ import com.eventsvk.entity.user.Role;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.services.RoleService;
 import com.eventsvk.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,10 @@ public class adminRestController {
     private final RoleService roleService;
     private final UserService userService;
 
+    @Operation(
+            summary = "Get users",
+            description = "Get all users"
+    )
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -28,35 +33,47 @@ public class adminRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("users/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") long userId) {
+    @Operation(
+            summary = "Get user",
+            description = "Get user by id"
+    )
+    @GetMapping("user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") long userId) {
         User user = userService.findUserById(userId);
         return user != null
                 ? new ResponseEntity<>(user, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(
+            summary = "Get roles",
+            description = "Get all roles"
+    )
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roleList = roleService.getAllRoles();
         return ResponseEntity.ok(roleList);
     }
 
-    @PostMapping("/users")
+    @Operation(
+            summary = "Save user",
+            description = "save new user"
+    )
+    @PostMapping("/user")
     public ResponseEntity<HttpStatus> saveNewUser(@RequestBody User user) {
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/users")
+    @PutMapping("/user")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("userId") long userId) {
-        userService.deleteUser(userId);
+    @PutMapping("/user/{id}")
+    public ResponseEntity<HttpStatus> banUser(@PathVariable("id") long userId) {
+        userService.banUser(userId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }
