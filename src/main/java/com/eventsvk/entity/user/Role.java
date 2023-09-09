@@ -1,4 +1,4 @@
-package com.eventsvk.entity;
+package com.eventsvk.entity.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,24 +1,20 @@
-package com.eventsvk.services;
+package com.eventsvk.services.Impl;
 
-import com.eventsvk.entity.Role;
+import com.eventsvk.entity.user.Role;
 import com.eventsvk.repositories.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.eventsvk.services.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-
-    @Autowired
-    public RoleServiceImpl(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
 
     @Override
     public List<Role> getAllRoles() {
@@ -33,7 +29,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getRoleById(long id) {
-        Optional<Role> foundRole = roleRepository.findById(id);
-        return foundRole.orElse(null);
+        return roleRepository.findById(id).orElse(null);
     }
 }

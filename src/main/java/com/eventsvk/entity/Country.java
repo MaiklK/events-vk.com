@@ -1,5 +1,6 @@
 package com.eventsvk.entity;
 
+import com.eventsvk.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,10 +19,14 @@ public class Country {
     @Column(name = "country_name")
     private String countryName;
     @Column(name = "country_id")
-    private int countryId;
+    private long countryId;
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public Country(String countryName) {
+        this.countryName = countryName;
+    }
 }

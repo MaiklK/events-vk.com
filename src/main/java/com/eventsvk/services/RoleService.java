@@ -1,6 +1,6 @@
 package com.eventsvk.services;
 
-import com.eventsvk.entity.Role;
+import com.eventsvk.entity.user.Role;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.eventsvk.services;
 
-import com.eventsvk.entity.User;
+import com.eventsvk.entity.user.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -9,13 +9,13 @@ public interface UserService extends UserDetailsService {
 
     void saveUser(User user);
 
-    User findUserByVkid(String userVKid);
+    User findUserByVkid(String userVkId);
 
     List<User> getAllUsers();
 
-    User findUserByUuid(String userUuid);
+    User findUserById(long userId);
 
-    void deleteUser(String userUuid);
+    void deleteUser(long userId);
 
     User updateUser(User updateUser);
 }

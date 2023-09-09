@@ -1,20 +1,24 @@
-package com.eventsvk.entity;
+package com.eventsvk.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "user_counters")
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class UserCounters {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column
+    private int albums;
+    @Column
+    private int audios;
     @Column
     private int followers;
     @Column
@@ -28,14 +32,8 @@ public class UserCounters {
     @Column
     private int photos;
     @Column
-    private int subscriptions;
-    @Column
     private int videos;
-    @Column(name = "new_photo_tags")
-    private int newPhotoTags;
-    @Column(name = "new recognition_tags")
-    private int newRecognitionTags;
-    @Column(name = "clips_followers")
+    @Column
     private int clipsFollowers;
 
     @JsonBackReference

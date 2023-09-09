@@ -1,8 +1,6 @@
 package com.eventsvk.dto;
 
-import com.eventsvk.entity.City;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CityDto extends City {
+public class CityDto {
     @JsonProperty("id")
-    private long id;
+    private long cityId;
     @JsonProperty("title")
-    private String title;
+    private String cityName;
 }

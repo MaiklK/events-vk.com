@@ -1,8 +1,10 @@
-package com.eventsvk.services;
+package com.eventsvk.services.Impl;
 
-import com.eventsvk.entity.User;
+import com.eventsvk.entity.user.User;
 import com.eventsvk.repositories.UserRepository;
 import com.eventsvk.security.CastomUserDetails;
+import com.eventsvk.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,16 +17,11 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional
@@ -44,13 +41,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUuid(String userUuid) {
-        return userRepository.findById(userUuid).orElse(null);
+    public User findUserById(long userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
     @Override
-    public void deleteUser(String userUuid) {
-        userRepository.deleteById(userUuid);
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
     }
 
     @Override

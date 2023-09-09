@@ -28,13 +28,14 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/home").permitAll()
+                        .requestMatchers("/admin").hasAnyAuthority("ADMIN")
                         .anyRequest().permitAll()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .successHandler(successUserHandler)
                 );
-//                .formLogin((form) -> form
-//                        .loginPage("/login")
-//                        .permitAll()
-//                        .successHandler(successUserHandler)
-//                )
 //                .logout((logout) -> logout
 //                        .logoutUrl("/logout")
 //                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))

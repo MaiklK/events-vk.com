@@ -1,7 +1,8 @@
-package com.eventsvk.services;
+package com.eventsvk.services.Impl;
 
 import com.eventsvk.entity.Event;
 import com.eventsvk.repositories.EventRepository;
+import com.eventsvk.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

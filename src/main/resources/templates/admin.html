@@ -1,208 +1,233 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" class="h-100"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
-    <meta charset="UTF-8">
-    <title>Users</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"
-    >
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Админка</title>
 </head>
 <body>
-
-<!-- верхняя навигация с logout -->
-<header>
-    <nav class="navbar navbar-light bg-dark" style="height: 7vh">
-        <div class="container-fluid">
-            <div>
-                <div class="text-white me-auto d-inline-block">
-                    <strong class="text-white" style="font-size: 1.5em" text="a@a.ru">
-                        a@a.ru
-                    </strong>
-                </div>
-                <div class="text-white me-auto d-inline-block">
-                    <span class="text-white" style="font-size: 1.5em">with roles: </span>
-                </div>
-                <div class="text-white me-auto d-inline-block">
-                    <span class="text-white" style="font-size: 1.5em"
-                          th:utext="ADMIN">
-                        USER
-                    </span>
-                </div>
-            </div>
-            <a class="navbar-brand text-white-50 fs-20" href="/logout">Logout</a>
-        </div>
-    </nav>
-</header>
-<!-- основной контейнер -->
-<div class="d-flex align-items-start" style=" height: 93vh; background: #f0f0f0;">
-    <!-- боковая навигация между Admin panel и user page -->
-    <div class="col-md-3 col-xl-2 py-2" style="padding-top: 15px; flex: 1 6; height: 100%; background: white">
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a href="/api/admin" class="nav-link active" aria-current="page">Admin</a>
-            </li>
-            <li class="nav-item">
-
-                <a href="/api/user" class="nav-link" aria-current="page">User</a>
-
-            </li>
-        </ul>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <p class="navbar-brand text-white">
+            <b><span class="align-middle" th:utext="${authUser}"></span></b>
+            <span class="align-middle">with roles:</span>
+<!--            <span class="align-middle" th:utext="${authUser.rolesToString()}"></span>-->
+        </p>
+        <form th:action="@{/logout}" method="GET">
+            <button type="submit" class="btn btn-dark text-secondary">Logout</button>
+        </form>
     </div>
-    <!-- Admin panel c закладками allUsers  и new -->
-    <div class="tab-content" id="v-pills-tabContent" style="padding: 15px 25px 15px 25px; flex: 5 6; height: 100%;">
-        <div class="tab-pane fade show active" id="v-pills-admin" role="tabpanel" aria-labelledby="v-pills-admin-tab">
-            <h1>Admin panel</h1>
-            <nav class="nav nav-tabs" id="nav-tab">
-                <a class="nav-link active" id="users-table-tab" onclick="getAllUsers()" data-bs-toggle="tab"
-                   href="#user-table">Users table</a>
-            </nav>
-            <!-- сами закладки  Users table and new user -->
-            <div class="tab-content" id="nav-tabContent">
-                <!-- закладка Users table -->
-                <div class="tab-pane fade show active" id="user-table">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title" style="margin: 5px 0">All users</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                <tr>
-                                    <hr style="border: 1px solid darkgrey; margin: auto">
-                                </tr>
-                                <tr>
-                                    <th>UserUuid</th>
-                                    <th>id Вконтакте</th>
-                                    <th>Имя</th>
-                                    <th>Фамилия</th>
-                                    <th>Дата рождения</th>
-                                    <th>Пол</th>
-                                    <th>Role</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                                </thead>
-                                <tbody class="users-table"></tbody>
-                            </table>
+</nav>
+<!--<section>-->
+<!--    <div class="container-fluid">-->
+<!--        <div class="row">-->
+<!--            <div class="p-0 col-2">-->
+<!--                <div class="nav flex-column nav-pills pt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">-->
+<!--                    <a class="nav-link active" data-bs-target="#admin" data-bs-toggle="tab"-->
+<!--                       role="tab" th:if="${authUser.rolesToString().contains('ADMIN')}"-->
+<!--                       aria-controls="v-pills-profile" aria-selected="true">Admin</a>-->
+<!--                    <a class="nav-link" data-bs-target="#user" data-bs-toggle="tab"-->
+<!--                       role="tab"-->
+<!--                       aria-controls="v-pills-profile" aria-selected="false">User</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-10 px-0">-->
+<!--                <div class="tab-content" id="homeTabContent">-->
+<!--                    <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin"-->
+<!--                         th:if="${authUser.rolesToString().contains('ADMIN')}">-->
+<!--                        <div class="container-fluid">-->
+<!--                            <h1 class="m-3 fw-bold">Admin panel</h1>-->
+<!--                            <div class="tab-content" id="tabContent">-->
+<!--                                <ul class="nav nav-tabs" role="tablist">-->
+<!--                                    <li class="nav-item" role="presentation" data-toggle="tab">-->
+<!--                                        <button class="nav-link active" id="userTable-tab" data-bs-toggle="tab"-->
+<!--                                                data-bs-target="#userTable" type="button" role="tab"-->
+<!--                                                aria-controls="userTable" aria-selected="true">-->
+<!--                                            Users Table-->
+<!--                                        </button>-->
+<!--                                    </li>-->
+<!--                                    <li class="nav-item" role="presentation" data-toggle="tab">-->
+<!--                                        <button class="nav-link" id="newUser-tab" data-bs-toggle="tab"-->
+<!--                                                data-bs-target="#newUser" type="button" role="tab"-->
+<!--                                                aria-controls="newUser" aria-selected="true">-->
+<!--                                            New user-->
+<!--                                        </button>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                                <div class="tab-content" id="myTabContent">-->
+<!--                                    <div class="tab-pane fade show active" id="userTable" role="tabpanel"-->
+<!--                                         aria-labelledby="userTable">-->
+<!--                                        <div class="card">-->
+<!--                                            <div class="card-header">-->
+<!--                                                <div class="m-1">-->
+<!--                                                    <h4>All users</h4>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
 
-                            <!-- модальное окно Edit -->
-                            <div class="modal fade edit-modal" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Edit user</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body"
-                                             style="display: flex; align-items: center; justify-content: center">
-                                            <form id="edit-form">
-                                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
-                                                    <input type="hidden" name="uuid"/>
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        UUID</h6>
-                                                    <input type="text" name="uuid" disabled class="form-control"
-                                                           placeholder="UUID">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        VKID</h6>
-                                                    <input type="text" name="vkid" disabled class="form-control"
-                                                           placeholder="VKID">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Имя</h6>
-                                                    <input type="text" name="firstName" class="form-control"
-                                                           placeholder="Имя">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Фамилия</h6>
-                                                    <input type="text" name="lastName" class="form-control"
-                                                           placeholder="Фамилия">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Пол</h6>
-                                                    <input type="number" name="sex" class="form-control"
-                                                           placeholder="Пол">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Password</h6>
-                                                    <input type="text" name="photoId" class="form-control"
-                                                           placeholder="Password">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Role</h6>
-                                                    <select multiple class="form-control" size="2"
-                                                            name="roles" style="margin-bottom: 20px">
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                Close
-                                            </button>
-                                            <button form="edit-form" type="submit" class="btn btn-primary">Edit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                                            <div class="card-body" bg-primary text-white>-->
+<!--                                                <table class="table table-striped table-hover">-->
+<!--                                                    <tr>-->
+<!--                                                        <th>vkid</th>-->
+<!--                                                        <th>Имя</th>-->
+<!--                                                        <th>Фамилия</th>-->
+<!--                                                        <th>Role</th>-->
+<!--                                                        <th>Обновить</th>-->
+<!--                                                        <th>Забанить</th>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr th:each="user : ${users}">-->
+<!--                                                        <td th:utext="${user.getVkid()()}"></td>-->
+<!--                                                        <td th:utext="${user.getFirstName()}"></td>-->
+<!--                                                        <td th:utext="${user.getLastName()}"></td>-->
+<!--                                                        <td th:utext="${user.rolesToString()}"></td>-->
+<!--                                                        <td>-->
+<!--                                                            <a type="button" class="btn btn-sm btn-primary"-->
+<!--                                                               data-bs-toggle="modal"-->
+<!--                                                               data-bs-target="#editModal"-->
+<!--                                                               th:data-bs-target="${'#editModal'+user.getId()}">Update</a>-->
+<!--                                                        </td>-->
+<!--                                                        <td>-->
+<!--                                                            <a type="button" class="btn btn-sm btn-danger"-->
+<!--                                                               data-bs-toggle="modal"-->
+<!--                                                               data-bs-target="#BAN"-->
+<!--                                                               th:data-bs-target="${'#BAN'+user.getId()}">Delete</a>-->
+<!--                                                        </td>-->
+<!--                                                        <div class="modal fade" th:id="${'editModal'+ user.getId()}"-->
+<!--                                                             aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                                                            <div class="modal-dialog" modal-dialog-centered>-->
+<!--                                                                <div class="modal-content">-->
+<!--                                                                    <div class="modal-header">-->
+<!--                                                                        <h5 class="modal-title" id="editModalLabel">Edit-->
+<!--                                                                            user</h5>-->
+<!--                                                                        <button type="button" class="btn-close"-->
+<!--                                                                                data-bs-dismiss="modal"-->
+<!--                                                                                aria-label="Close"></button>-->
+<!--                                                                    </div>-->
+<!--                                                                    <form th:action="@{/v1/api/users}"-->
+<!--                                                                          th:object="${user}" th:method="PATCH">-->
+<!--                                                                        <div class="modal-body col-md text-center">-->
+<!--                                                                            <br>-->
+<!--                                                                            <label for="id0"><b>ID</b></label>-->
+<!--                                                                            <input th:name="id" th:type="text"-->
+<!--                                                                                   class="form-control"-->
+<!--                                                                                   id="id0" th:value="*{id}" disabled/>-->
+<!--                                                                            <br>-->
+<!--                                                                            <label for="name"><b>Имя</b></label>-->
+<!--                                                                            <input th:name="firstName" th:type="text"-->
+<!--                                                                                   class="form-control" id="name"-->
+<!--                                                                                   th:value="*{firstName}" disabled/>-->
+<!--                                                                            <br>-->
+<!--                                                                            <label for="lastName"><b>Фамилия</b></label>-->
+<!--                                                                            <input th:name="lastName" th:type="text"-->
+<!--                                                                                   class="form-control" id="lastName"-->
+<!--                                                                                   th:value="*{lastName}" disabled/>-->
+<!--                                                                            <br>-->
+<!--                                                                            <label for="password"><b>Password</b></label>-->
+<!--                                                                            <input th:name="password" type="password"-->
+<!--                                                                                   class="form-control" id="password"/>-->
+<!--                                                                            <br>-->
+<!--                                                                            <label for="roles"><b>Role</b></label>-->
+<!--                                                                            <select class="form-control" id="roles"-->
+<!--                                                                                    name="roles"-->
+<!--                                                                                    multiple="multiple">-->
+<!--                                                                                <option th:each="role : ${roles}"-->
+<!--                                                                                        th:selected="${role.getName()}"-->
+<!--                                                                                        th:value="${role.getId()}"-->
+<!--                                                                                        th:text="${role.getName()}">Role-->
+<!--                                                                                    name-->
+<!--                                                                                </option>-->
+<!--                                                                            </select>-->
+<!--                                                                            <br><br>-->
+<!--                                                                        </div>-->
+<!--                                                                        <div class="modal-footer">-->
+<!--                                                                            <button type="submit"-->
+<!--                                                                                    class="btn btn-primary">-->
+<!--                                                                                Edit-->
+<!--                                                                            </button>-->
+<!--                                                                            <button type="button"-->
+<!--                                                                                    class="btn btn-secondary"-->
+<!--                                                                                    data-bs-dismiss="modal">Close-->
+<!--                                                                            </button>-->
+<!--                                                                        </div>-->
+<!--                                                                    </form>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="modal fade" th:id="${'BAN'+user.getId()}"-->
+<!--                                                             aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                                                            <div class="modal-dialog" role="document">-->
+<!--                                                                <div class="modal-content">-->
+<!--                                                                    <div class="modal-header">-->
+<!--                                                                        <h5 class="modal-title" id="exampleModalLabel">-->
+<!--                                                                            Delete user</h5>-->
+<!--                                                                        <button type="button" class="btn-close"-->
+<!--                                                                                data-bs-dismiss="modal"-->
+<!--                                                                                aria-label="Close"></button>-->
+<!--                                                                    </div>-->
+<!--                                                                    <form class="modal-body col-md text-center"-->
+<!--                                                                          th:action="@{/v1/api}"-->
+<!--                                                                          th:method="PUT">-->
+<!--                                                                        <div class="modal-body col-md">-->
+<!--                                                                            <label for="id"><b>ID</b></label>-->
+<!--                                                                            <input th:name="id" th:type="text"-->
+<!--                                                                                   class="form-control"-->
+<!--                                                                                   id="id" th:value="${user.getId()}"-->
+<!--                                                                                   disabled/>-->
+<!--                                                                            <br>-->
+<!--                                                                            <br><label for="name1"><b>Name</b></label>-->
+<!--                                                                            <input th:name="name" th:type="text"-->
+<!--                                                                                   class="form-control"-->
+<!--                                                                                   id="name1"-->
+<!--                                                                                   th:value="${user.getFirstName()}"-->
+<!--                                                                                   disabled/>-->
+<!--                                                                            <br>-->
+<!--                                                                            <label for="surname1"><b>Last-->
+<!--                                                                                Name</b></label>-->
+<!--                                                                            <input th:name="surname" th:type="text"-->
+<!--                                                                                   class="form-control" id="surname1"-->
+<!--                                                                                   th:value="${user.getLastName()}"-->
+<!--                                                                                   disabled/>-->
+<!--                                                                            <br>-->
+<!--                                                                        </div>-->
 
-                            <!-- модальное окно Delete -->
-                            <div class="modal fade delete-modal" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel">Delete user</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body"
-                                             style="display: flex; align-items: center; justify-content: center">
-                                            <form class="delete-form" id="delete-form">
-                                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
-                                                    <input type="hidden" name="uuid"/>
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        ID</h6>
-                                                    <input type="text" name="uuid" disabled class="form-control"
-                                                           placeholder="ID">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Firas name</h6>
-                                                    <input type="text" name="firstName" disabled class="form-control"
-                                                           placeholder="Firstname">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Last name</h6>
-                                                    <input type="text" name="lastName" disabled class="form-control"
-                                                           placeholder="Lastname">
-                                                    <h6 class="card-title" style="margin: 5px 0; text-align: center">
-                                                        Role</h6>
-                                                    <select style="margin-bottom: 20px" name="roles" disabled multiple
-                                                            class="form-control"
-                                                            size="2">
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                Close
-                                            </button>
-                                            <button form="delete-form" id="delete-btn" type="submit"
-                                                    class="btn btn-danger">Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
-        integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
+<!--                                                                        <div class="modal-footer">-->
+<!--                                                                            <button type="button"-->
+<!--                                                                                    class="btn btn-secondary"-->
+<!--                                                                                    data-bs-dismiss="modal">Close-->
+<!--                                                                            </button>-->
+<!--                                                                            <button type="submit"-->
+<!--                                                                                    class="btn btn-danger">Delete-->
+<!--                                                                            </button>-->
+<!--                                                                        </div>-->
+<!--                                                                    </form>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </tr>-->
+<!--                                                </table>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    </div>-->
+<!--</section>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
-        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
-        crossorigin="anonymous"></script>
-<script type="text/javascript" src="/AppFile.js"></script>
 </body>
 </html>

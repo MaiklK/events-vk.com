@@ -1,7 +1,7 @@
 package com.eventsvk.controllers;
 
-import com.eventsvk.entity.Role;
-import com.eventsvk.entity.User;
+import com.eventsvk.entity.user.Role;
+import com.eventsvk.entity.user.User;
 import com.eventsvk.services.RoleService;
 import com.eventsvk.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/v1/api")
 @RequiredArgsConstructor
-public class adminController {
+public class adminRestController {
 
     private final RoleService roleService;
     private final UserService userService;
@@ -23,14 +23,14 @@ public class adminController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return users != null && !users.isEmpty()
-                ? new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK)
+        return !users.isEmpty()
+                ? new ResponseEntity<>(users, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("users/{userUuid}")
-    public ResponseEntity<User> getUserById(@PathVariable("userUuid") String userUuid) {
-        User user = userService.findUserByUuid(userUuid);
+    @GetMapping("users/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable("userId") long userId) {
+        User user = userService.findUserById(userId);
         return user != null
                 ? new ResponseEntity<>(user, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -54,9 +54,9 @@ public class adminController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("userUuid") String userUuid) {
-        userService.deleteUser(userUuid);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("userId") long userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

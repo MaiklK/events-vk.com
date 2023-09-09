@@ -1,6 +1,6 @@
 package com.eventsvk.configuration;
 
-import com.eventsvk.entity.Role;
+import com.eventsvk.entity.user.Role;
 import com.eventsvk.services.EventService;
 import com.eventsvk.services.RoleService;
 import com.eventsvk.services.UserService;
@@ -27,19 +27,44 @@ public class Init {
     public void initUsers() {
 
         Role adminRole = new Role("ADMIN");
-        Set<Role> adminRoles = new HashSet<>();
-        adminRoles.add(adminRole);
+        Set<Role> adminRoles = new HashSet<>(Set.of(adminRole));
 
         roleService.saveRole(adminRole);
 
         Role userRole = new Role("USER");
-        Set<Role> userRoles = new HashSet<>();
-        userRoles.add(userRole);
+        Set<Role> userRoles = new HashSet<>(Set.of(userRole));
 
         roleService.saveRole(userRole);
 
-//        User admin = new User("admin", "admin", (byte) 20, "a@a.ru", "admin", adminRoles);
-
+//        User admin = User.builder()
+//                .vkid("420214979")
+//                .birthdayDate("3.4.1985")
+//                .firsName("Михаил")
+//                .lastName("Космачев")
+//                .roles(adminRoles)
+//                .password("admin")
+//                .codeFlow("668d466c1cb7e1aa6a")
+//                .isClosed(false)
+//                .sex(1)
+//                .city(new City("Москва"))
+//                .country(new Country("Россия"))
+//                .photoId("420214979_456239109")
+//                .counters(UserCounters.builder()
+//                        .clipsFollowers(10)
+//                        .followers(10)
+//                        .friends(20)
+//                        .gifts(10)
+//                        .groups(10)
+//                        .pages(10)
+//                        .photos(10)
+//                        .subscriptions(10)
+//                        .videos(10)
+//                        .newPhotoTags(10)
+//                        .newPhotoTags(0)
+//                        .newRecognitionTags(0)
+//                        .build())
+//                .build();
+//
 //        userService.saveUser(admin);
 
 //        User user = new User("user", "user", (byte) 20, "u@u.ru", "user", userRoles);

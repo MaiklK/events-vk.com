@@ -1,6 +1,6 @@
 package com.eventsvk.security;
 
-import com.eventsvk.entity.User;
+import com.eventsvk.entity.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
