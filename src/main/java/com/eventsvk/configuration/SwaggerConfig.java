@@ -1,23 +1,38 @@
 package com.eventsvk.configuration;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import lombok.AllArgsConstructor;
-import org.springdoc.core.models.GroupedOpenApi;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 @Configuration
+@RequiredArgsConstructor
+@OpenAPIDefinition
 @PropertySource("classpath:info.properties")
-@AllArgsConstructor
 public class SwaggerConfig {
 
-    private final Environment env;
+    @Value("${info.title}")
+    private String TITLE;
+    @Value("${info.version}")
+    private String VERSION;
+    @Value("${info.description}")
+    private String DESCRIPTION;
+    @Value("${info.licence}")
+    private String LICENSE;
+    @Value("${info.title}")
+    private String EMAIL;
+    @Value("${info.url}")
+    private String URL;
+    @Value("${info.name}")
+    private String NAME;
 
     @Bean
     public OpenAPI customOpenAPI() {
@@ -25,15 +40,16 @@ public class SwaggerConfig {
                 .components(new Components())
                 .info(
                         new Info()
-                                .title(env.getProperty("info.title"))
-                                .version(env.getProperty("info.version"))
-                                .description(env.getProperty("info.description"))
-                                .license(new License().name("Apache 2.0").url("https://springdoc.org"))
+
+                                .title(TITLE)
+                                .version(VERSION)
+                                .description(DESCRIPTION)
+                                .license(new License().name("Apache 2.0").url(LICENSE))
                                 .contact(
                                         new Contact()
-                                                .email(env.getProperty("info.email"))
-                                                .url(env.getProperty("info.url"))
-                                                .name(env.getProperty("info.name"))
+                                                .email(EMAIL)
+                                                .url(URL)
+                                                .name(NAME)
                                 )
                 );
     }
@@ -46,4 +62,12 @@ public class SwaggerConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi actuatorApi() {
+        return GroupedOpenApi.builder()
+                .group("actuator")
+                .pathsToMatch("/actuator/**")
+                .pathsToExclude("/actuator/health/*")
+                .build();
+    }
 }

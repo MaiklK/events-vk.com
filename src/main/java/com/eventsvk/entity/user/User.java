@@ -2,9 +2,7 @@ package com.eventsvk.entity.user;
 
 import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -22,10 +20,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "users")
 @Entity
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "seq_user", sequenceName = "seq_user", allocationSize = 1)
     private long id;
     @Column
     private String vkid;
@@ -53,23 +51,33 @@ public class User implements UserDetails {
     private boolean isAccountNonLocked;
 
     @Fetch(FetchMode.JOIN)
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
-    @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_city",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id"))
     private City city;
+    @Fetch(FetchMode.JOIN)
 
-    @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_country",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id"))
     private Country country;
 
     @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserCounters counters;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserPersonal userPersonal;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -88,7 +96,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.isAccountNonLocked;
     }
 
     @Override
@@ -103,11 +111,18 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User\n{ id : " + this.vkid + ", Имя : " + this.firstName + "\nФамилия : " + this.lastName + " }";
+        return "User\n{ id : "
+                + this.vkid + ", Имя : "
+                + this.firstName + "\nФамилия : "
+                + this.lastName + "account is banned: "
+                + this.isAccountNonLocked + "Город: "
+                + this.city.getTitle() + "Страна: "
+                + this.country.getTitle() + "Роли: "
+                + this.roles + " }";
     }
 
     public String rolesToString() {
-        StringBuilder str = new StringBuilder("");
+        StringBuilder str = new StringBuilder();
 
         this.roles.forEach(role -> str.append(role.getName()));
 

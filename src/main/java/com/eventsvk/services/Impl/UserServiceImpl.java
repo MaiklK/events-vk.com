@@ -1,11 +1,14 @@
 package com.eventsvk.services.Impl;
 
+import com.eventsvk.entity.City;
+import com.eventsvk.entity.Country;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.repositories.UserRepository;
 import com.eventsvk.security.CastomUserDetails;
+import com.eventsvk.services.CityService;
+import com.eventsvk.services.CountryService;
 import com.eventsvk.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,11 +25,26 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CityService cityRepository;
+    private final CountryService countryService;
 
     @Override
     @Transactional
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (user.getCity() != null) {
+            City city = cityRepository.findCityById(user.getCity().getId());
+            if (city != null) {
+                user.setCity(city);
+            }
+        }
+        if (user.getCountry() != null) {
+            Country country = countryService.findCountryById(user.getCountry().getId());
+            if (country != null) {
+                user.setCountry(country);
+            }
+        }
         userRepository.save(user);
     }
 
@@ -45,6 +63,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).orElse(null);
     }
 
+    @Transactional
     @Override
     public void banUser(long userId) {
         User user = findUserById(userId);
@@ -52,9 +71,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     @Override
     public User updateUser(User updateUser) {
         updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+        System.out.println(updateUser);
         return userRepository.save(updateUser);
     }
 

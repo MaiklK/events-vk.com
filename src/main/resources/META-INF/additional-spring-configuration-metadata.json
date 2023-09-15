@@ -24,5 +24,10 @@
       "name": "scope",
       "type": "java.lang.String",
       "description": "Description for scope."
+    },
+    {
+      "name": "acces_token",
+      "type": "java.lang.String",
+      "description": "Description for acces_token."
     }
   ] }

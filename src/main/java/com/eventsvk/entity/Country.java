@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "countries")
 @Getter
@@ -14,19 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Country {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "country_name")
-    private String countryName;
-    @Column(name = "country_id")
-    private long countryId;
+    private int id;
+    @Column
+    private String title;
 
     @JsonBackReference
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    public Country(String countryName) {
-        this.countryName = countryName;
-    }
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private List<User> user;
 }

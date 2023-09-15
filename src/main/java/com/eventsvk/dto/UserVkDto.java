@@ -37,5 +37,7 @@ public class UserVkDto {
     private UserCountersDto counters;
     @JsonProperty("can_access_closed")
     private boolean canAccessClosed;
+    @JsonProperty("personal")
+    private UserPersonalDto userPersonal;
 }
 

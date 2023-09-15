@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CountryDto {
     @JsonProperty("id")
-    private long countryId;
+    private int id;
     @JsonProperty("title")
-    private String countryName;
+    private String title;
 }

@@ -1,4 +1,4 @@
-package com.eventsvk.entity;
+package com.eventsvk.entity.Event;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;

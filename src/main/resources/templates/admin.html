@@ -85,7 +85,7 @@
                                             </td>
                                             <td th:utext="${user.getFirstName()}"></td>
                                             <td th:utext="${user.getLastName()}"></td>
-                                            <td th:utext="${user.rolesToString()}"></td>
+                                            <td th:utext="${user.roles}"></td>
                                             <td>
                                                 <a type="button" class="btn btn-sm btn-primary"
                                                    data-bs-toggle="modal"
@@ -109,8 +109,8 @@
                                                                     data-bs-dismiss="modal"
                                                                     aria-label="Close"></button>
                                                         </div>
-                                                        <form th:action="@{/v1/api/user/{id}(id=${user.getId})}"
-                                                              th:object="${user}" th:method="PATCH">
+                                                        <form th:action="@{/user/upate}"
+                                                              th:object="${user}" th:method="PUT">
                                                             <div class="modal-body col-md text-center">
                                                                 <br>
                                                                 <label for="id"><b>ID в базе</b></label>
@@ -173,7 +173,7 @@
                                                                     aria-label="Close"></button>
                                                         </div>
                                                         <form class="modal-body col-md text-center"
-                                                              th:action="@{/v1/api/user/{id}(id=${user.getId()})}"
+                                                              th:action="@{/user/{id}(id=${user.getId()})}"
                                                               th:method="PUT">
                                                             <div class="modal-body col-md">
                                                                 <label for="id1"><b>ID в базе</b></label>

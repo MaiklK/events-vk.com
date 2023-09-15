@@ -1,6 +1,6 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.entity.Event;
+import com.eventsvk.entity.Event.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventRepository extends JpaRepository<Event, String> {

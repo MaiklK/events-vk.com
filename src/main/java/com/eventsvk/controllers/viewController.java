@@ -1,30 +1,37 @@
 package com.eventsvk.controllers;
 
+import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
-import com.eventsvk.services.AuthVkService;
 import com.eventsvk.services.RoleService;
 import com.eventsvk.services.UserService;
+import com.eventsvk.services.VkontakteService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
 public class viewController {
-    private final AuthVkService authVkService;
+    private final VkontakteService vkontakteService;
     private final UserService userService;
     private final RoleService roleService;
 
+    @GetMapping("login/vk")
+    public String redirectLoginVK() {
+        return "redirect:"
+                + vkontakteService.getAuthorizationUrl();
+    }
+
     @GetMapping("/index")
-    public String getIndex(ModelMap model) {
-        model.addAttribute("user", userService.getAllUsers().get(0));
+    public String getIndex(ModelMap model, Principal principal) {
+        model.addAttribute("user",
+                userService.findUserByVkid(principal.getName()));
         return "index";
     }
 
@@ -42,8 +49,8 @@ public class viewController {
     }
 
     @GetMapping("/check_auth")
-    public String getAuth(@RequestParam String code, HttpSession session, ModelMap model) {
-        CustomAuthentication customAuthentication = authVkService.getCustomAuthentication(code);
+    public String getAuth(@RequestParam String code, HttpSession session) {
+        CustomAuthentication customAuthentication = vkontakteService.getCustomAuthentication(code);
         if (customAuthentication != null) {
             SecurityContextHolder.getContext().setAuthentication(customAuthentication);
             session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
@@ -55,5 +62,17 @@ public class viewController {
             return "redirect:/index";
         }
         return "login";
+    }
+
+    @PutMapping("/user/update")
+    public String updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        return "redirect:/admin";
+    }
+
+    @PutMapping("/user/{id}")
+    public String banUser(@PathVariable("id") long userId) {
+        userService.banUser(userId);
+        return "redirect:/admin";
     }
 }

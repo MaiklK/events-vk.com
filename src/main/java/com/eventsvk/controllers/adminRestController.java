@@ -57,7 +57,7 @@ public class adminRestController {
 
     @Operation(
             summary = "Save user",
-            description = "save new user"
+            description = "Save new user"
     )
     @PostMapping("/user")
     public ResponseEntity<HttpStatus> saveNewUser(@RequestBody User user) {
@@ -65,12 +65,20 @@ public class adminRestController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Update user",
+            description = "Update user"
+    )
     @PutMapping("/user")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Ban user",
+            description = "Ban user"
+    )
     @PutMapping("/user/{id}")
     public ResponseEntity<HttpStatus> banUser(@PathVariable("id") long userId) {
         userService.banUser(userId);
