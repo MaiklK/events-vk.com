@@ -2,8 +2,8 @@ package com.eventsvk.controllers;
 
 import com.eventsvk.entity.user.Role;
 import com.eventsvk.entity.user.User;
-import com.eventsvk.services.RoleService;
-import com.eventsvk.services.UserService;
+import com.eventsvk.services.User.RoleService;
+import com.eventsvk.services.User.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

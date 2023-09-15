@@ -1,4 +1,4 @@
-package com.eventsvk.services;
+package com.eventsvk.services.Event;
 
 import com.eventsvk.entity.Event.Event;
 

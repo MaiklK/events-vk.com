@@ -1,4 +1,4 @@
-package com.eventsvk.services;
+package com.eventsvk.services.User;
 
 import com.eventsvk.entity.user.User;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,13 +1,17 @@
-package com.eventsvk.services.Impl;
+package com.eventsvk.services.User.Impl;
 
 import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
 import com.eventsvk.entity.user.User;
+import com.eventsvk.entity.user.UserCounters;
+import com.eventsvk.entity.user.UserPersonal;
 import com.eventsvk.repositories.UserRepository;
 import com.eventsvk.security.CastomUserDetails;
 import com.eventsvk.services.CityService;
 import com.eventsvk.services.CountryService;
-import com.eventsvk.services.UserService;
+import com.eventsvk.services.User.UserCountersService;
+import com.eventsvk.services.User.UserPersonalService;
+import com.eventsvk.services.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +31,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CityService cityRepository;
     private final CountryService countryService;
+    private final UserCountersService userCountersService;
+    private final UserPersonalService userPersonalService;
 
     @Override
     @Transactional
@@ -45,7 +51,20 @@ public class UserServiceImpl implements UserService {
                 user.setCountry(country);
             }
         }
+
         userRepository.save(user);
+
+        UserCounters counters = user.getCounters();
+        if (counters != null) {
+            counters.setUser(user);
+            userCountersService.saveUserCounters(counters);
+        }
+
+        UserPersonal userPersonal = user.getUserPersonal();
+        if (userPersonal != null) {
+            userPersonal.setUser(user);
+            userPersonalService.saveUserPersonal(userPersonal);
+        }
     }
 
     @Override

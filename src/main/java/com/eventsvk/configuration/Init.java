@@ -4,7 +4,7 @@ import com.eventsvk.entity.user.Role;
 import com.eventsvk.repositories.CityRepository;
 import com.eventsvk.services.CountryService;
 import com.eventsvk.services.RegionService;
-import com.eventsvk.services.RoleService;
+import com.eventsvk.services.User.RoleService;
 import com.eventsvk.services.VkontakteService;
 import com.vk.api.sdk.client.actors.UserActor;
 import jakarta.annotation.PostConstruct;

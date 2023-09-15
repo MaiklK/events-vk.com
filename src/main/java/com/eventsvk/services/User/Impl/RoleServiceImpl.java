@@ -1,8 +1,8 @@
-package com.eventsvk.services.Impl;
+package com.eventsvk.services.User.Impl;
 
 import com.eventsvk.entity.user.Role;
 import com.eventsvk.repositories.RoleRepository;
-import com.eventsvk.services.RoleService;
+import com.eventsvk.services.User.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

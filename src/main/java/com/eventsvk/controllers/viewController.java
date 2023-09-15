@@ -2,8 +2,8 @@ package com.eventsvk.controllers;
 
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
-import com.eventsvk.services.RoleService;
-import com.eventsvk.services.UserService;
+import com.eventsvk.services.User.RoleService;
+import com.eventsvk.services.User.UserService;
 import com.eventsvk.services.VkontakteService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +66,7 @@ public class viewController {
 
     @PutMapping("/user/update")
     public String updateUser(@RequestBody User user) {
+        System.out.println(user);
         userService.updateUser(user);
         return "redirect:/admin";
     }

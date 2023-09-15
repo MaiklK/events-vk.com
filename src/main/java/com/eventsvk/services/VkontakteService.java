@@ -7,6 +7,8 @@ import com.eventsvk.entity.Region;
 import com.eventsvk.entity.user.Role;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
+import com.eventsvk.services.User.RoleService;
+import com.eventsvk.services.User.UserService;
 import com.eventsvk.util.ConverterDto;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;

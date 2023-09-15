@@ -43,184 +43,183 @@
 <div class="container">
     <h1 class="m-3 fw-bold">Панель Админа</h1>
     <section class="tab-content" id="homeTabContent">
-        <article class="tab-pane fade show active" id="admin" role="tabpanel" aria-label="admin">
-            <div class="card">
-                <div class="tab-content" id="tabContent">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="userTable-tab" data-bs-toggle="tab"
-                                    data-bs-target="#userTable" type="button" role="tab" aria-controls="userTable"
-                                    aria-selected="true">
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="userTable" role="tabpanel"
-                             aria-labelledby="userTable">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="m-1">
-                                        <h4>Пользователи</h4>
-                                    </div>
+        <!--        <article class="tab-pane fade show active" id="admin" role="ADMIN" aria-label="admin">-->
+        <div class="card">
+            <div class="tab-content" id="tabContent">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="userTable-tab" data-bs-toggle="tab"
+                                data-bs-target="#userTable" type="button" role="tab" aria-controls="userTable"
+                                aria-selected="true">
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="userTable" role="tabpanel"
+                         aria-labelledby="userTable">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="m-1">
+                                    <h4>Пользователи</h4>
                                 </div>
+                            </div>
 
-                                <div class="card-body" bg-primary text-white>
-                                    <table class="table table-striped table-hover">
-                                        <tr>
-                                            <th>VKID</th>
-                                            <th>Фото</th>
-                                            <th>Имя</th>
-                                            <th>Фамилия</th>
-                                            <th>Role</th>
-                                            <th>Update</th>
-                                            <th>Ban</th>
-                                        </tr>
-                                        <tr th:each="user : ${users}">
-                                            <td th:utext="${user.getVkid()}"></td>
-                                            <td>
-                                                <div class="image-zoom">
-                                                    <img th:src="${user.getPhotoBig()}"
-                                                         alt="аватарка" class="small-image">
-                                                </div>
-                                            </td>
-                                            <td th:utext="${user.getFirstName()}"></td>
-                                            <td th:utext="${user.getLastName()}"></td>
-                                            <td th:utext="${user.roles}"></td>
-                                            <td>
-                                                <a type="button" class="btn btn-sm btn-primary"
-                                                   data-bs-toggle="modal"
-                                                   data-bs-target="#editModal"
-                                                   th:data-bs-target="${'#editModal'+user.getId()}">Update</a>
-                                            </td>
-                                            <td>
-                                                <a type="button" class="btn btn-sm btn-danger"
-                                                   data-bs-toggle="modal"
-                                                   data-bs-target="#ban"
-                                                   th:data-bs-target="${'#ban'+user.getId()}">Ban</a>
-                                            </td>
-                                            <div class="modal fade" th:id="${'editModal'+ user.getId()}"
-                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" modal-dialog-centered>
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="editModalLabel">Edit
-                                                                user</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <form th:action="@{/user/upate}"
-                                                              th:object="${user}" th:method="PUT">
-                                                            <div class="modal-body col-md text-center">
-                                                                <br>
-                                                                <label for="id"><b>ID в базе</b></label>
-                                                                <input th:name="id" th:type="text"
-                                                                       class="form-control"
-                                                                       id="id" th:value="*{id}" disabled/>
-                                                                <br>
-                                                                <label for="vkid"><b>ID вконтакте</b></label>
-                                                                <input th:name="vkid" th:type="text"
-                                                                       class="form-control" id="vkid"
-                                                                       th:value="*{vkid}" disabled/>
-                                                                <br>
-                                                                <label for="firstName"><b>Имя</b></label>
-                                                                <input th:name="firstName" th:type="text"
-                                                                       class="form-control" id="firstName"
-                                                                       th:value="*{firstName}" disabled/>
-                                                                <br>
-                                                                <label for="lastName"><b>Фамилия</b></label>
-                                                                <input th:name="lastName" th:type="text"
-                                                                       class="form-control" id="lastName"
-                                                                       th:value="*{lastName}" disabled/>
-                                                                <br>
-                                                                <label for="password"><b>Password</b></label>
-                                                                <input th:name="password" type="password"
-                                                                       class="form-control" id="password"/>
-                                                                <br>
-                                                                <label for="roles"><b>Role</b></label>
-                                                                <select class="form-control" id="roles"
-                                                                        name="roles"
-                                                                        multiple="multiple">
-                                                                    <option th:each="role : ${roles}"
-                                                                            th:selected="${role.getName()}"
-                                                                            th:value="${role.getId()}"
-                                                                            th:text="${role.getName()}">Role name
-                                                                    </option>
-                                                                </select>
-                                                                <br><br>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Edit
-                                                                </button>
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Close
-                                                                </button>
-                                                            </div>
-                                                        </form>
+                            <div class="card-body" bg-primary>
+                                <table class="table table-striped table-hover">
+                                    <tr>
+                                        <th>VKID</th>
+                                        <th>Фото</th>
+                                        <th>Имя</th>
+                                        <th>Фамилия</th>
+                                        <th>Role</th>
+                                        <th>Update</th>
+                                        <th>Ban</th>
+                                    </tr>
+                                    <tr th:each="user : ${users}">
+                                        <td th:utext="${user.getVkid()}"></td>
+                                        <td>
+                                            <div class="image-zoom">
+                                                <img th:src="${user.getPhotoBig()}"
+                                                     alt="аватарка" class="small-image">
+                                            </div>
+                                        </td>
+                                        <td th:utext="${user.getFirstName()}"></td>
+                                        <td th:utext="${user.getLastName()}"></td>
+                                        <td th:utext="${user.roles}"></td>
+                                        <td>
+                                            <a type="button" class="btn btn-sm btn-primary"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#editModal"
+                                               th:data-bs-target="${'#editModal'+user.getId()}">Update</a>
+                                        </td>
+                                        <td>
+                                            <a type="button" class="btn btn-sm btn-danger"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#ban"
+                                               th:data-bs-target="${'#ban'+user.getId()}">Ban</a>
+                                        </td>
+                                        <div class="modal fade" th:id="${'editModal'+ user.getId()}"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" modal-dialog-centered>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editModalLabel">Edit
+                                                            user</h5>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                     </div>
+                                                    <form th:action="@{/user/upate}"
+                                                          th:object="${user}" th:method="PUT">
+                                                        <div class="modal-body col-md text-center">
+                                                            <br>
+                                                            <label for="id"><b>ID в базе</b></label>
+                                                            <input th:name="id" th:type="text"
+                                                                   class="form-control"
+                                                                   id="id" th:value="*{id}" disabled/>
+                                                            <br>
+                                                            <label for="vkid"><b>ID вконтакте</b></label>
+                                                            <input th:name="vkid" th:type="text"
+                                                                   class="form-control" id="vkid"
+                                                                   th:value="*{vkid}" disabled/>
+                                                            <br>
+                                                            <label for="firstName"><b>Имя</b></label>
+                                                            <input th:name="firstName" th:type="text"
+                                                                   class="form-control" id="firstName"
+                                                                   th:value="*{firstName}" disabled/>
+                                                            <br>
+                                                            <label for="lastName"><b>Фамилия</b></label>
+                                                            <input th:name="lastName" th:type="text"
+                                                                   class="form-control" id="lastName"
+                                                                   th:value="*{lastName}" disabled/>
+                                                            <br>
+                                                            <label for="password"><b>Password</b></label>
+                                                            <input th:name="password" type="password"
+                                                                   class="form-control" id="password"/>
+                                                            <br>
+                                                            <label for="roles"><b>Role</b></label>
+                                                            <select class="form-control" id="roles"
+                                                                    name="roles"
+                                                                    multiple="multiple">
+                                                                <option th:each="role : ${roles}"
+                                                                        th:selected="${role.getName()}"
+                                                                        th:value="${role.getId()}"
+                                                                        th:text="${role.getName()}">Role name
+                                                                </option>
+                                                            </select>
+                                                            <br><br>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">
+                                                                Edit
+                                                            </button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Close
+                                                            </button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
-                                            <div class="modal fade" th:id="${'ban'+user.getId()}"
-                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">BAN
-                                                                user</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <form class="modal-body col-md text-center"
-                                                              th:action="@{/user/{id}(id=${user.getId()})}"
-                                                              th:method="PUT">
-                                                            <div class="modal-body col-md">
-                                                                <label for="id1"><b>ID в базе</b></label>
-                                                                <input th:name="id" th:type="text"
-                                                                       class="form-control"
-                                                                       id="id1" th:value="${user.getId()}"
-                                                                       disabled/>
-                                                                <br>
-                                                                <label for="vkid1"><b>ID вконтакте</b></label>
-                                                                <input th:name="vkid" th:type="text"
-                                                                       class="form-control"
-                                                                       id="vkid1" th:value="${user.getVkid()}"
-                                                                       disabled/>
-                                                                <br><label for="name1"><b>Имя</b></label>
-                                                                <input th:name="name" th:type="text"
-                                                                       class="form-control"
-                                                                       id="name1" th:value="${user.getFirstName()}"
-                                                                       disabled/>
-                                                                <br>
-                                                                <label for="surname1"><b>Фамилия</b></label>
-                                                                <input th:name="surname" th:type="text"
-                                                                       class="form-control" id="surname1"
-                                                                       th:value="${user.getLastName()}" disabled/>
-                                                                <br>
-                                                                <br>
-                                                            </div>
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Close
-                                                                </button>
-                                                                <button type="submit" class="btn btn-danger">BAN
-                                                                </button>
-                                                            </div>
-                                                        </form>
+                                        </div>
+                                        <div class="modal fade" th:id="${'ban'+user.getId()}"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">BAN
+                                                            user</h5>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                     </div>
+                                                    <form class="modal-body col-md text-center"
+                                                          th:action="@{/user/{id}(id=${user.getId()})}"
+                                                          th:method="PUT">
+                                                        <div class="modal-body col-md">
+                                                            <label for="id1"><b>ID в базе</b></label>
+                                                            <input th:name="id" th:type="text"
+                                                                   class="form-control"
+                                                                   id="id1" th:value="${user.getId()}"
+                                                                   disabled/>
+                                                            <br>
+                                                            <label for="vkid1"><b>ID вконтакте</b></label>
+                                                            <input th:name="vkid" th:type="text"
+                                                                   class="form-control"
+                                                                   id="vkid1" th:value="${user.getVkid()}"
+                                                                   disabled/>
+                                                            <br><label for="name1"><b>Имя</b></label>
+                                                            <input th:name="name" th:type="text"
+                                                                   class="form-control"
+                                                                   id="name1" th:value="${user.getFirstName()}"
+                                                                   disabled/>
+                                                            <br>
+                                                            <label for="surname1"><b>Фамилия</b></label>
+                                                            <input th:name="surname" th:type="text"
+                                                                   class="form-control" id="surname1"
+                                                                   th:value="${user.getLastName()}" disabled/>
+                                                            <br>
+                                                            <br>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="submit" class="btn btn-danger">BAN
+                                                            </button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
-                                        </tr>
-                                    </table>
-                                </div>
+                                        </div>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </article>
+        </div>
     </section>
 </div>
 
