@@ -2,7 +2,6 @@ package com.eventsvk.entity.user;
 
 import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -22,7 +21,7 @@ import java.util.Set;
 @Entity
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column
     private String vkid;
@@ -70,11 +69,9 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "country_id"))
     private Country country;
 
-    @JsonManagedReference
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private UserCounters counters;
 
-    @JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserPersonal userPersonal;
 

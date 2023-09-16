@@ -2,7 +2,6 @@ package com.eventsvk.entity;
 
 import com.eventsvk.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

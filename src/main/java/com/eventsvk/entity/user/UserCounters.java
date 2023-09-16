@@ -1,8 +1,10 @@
 package com.eventsvk.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -12,7 +14,7 @@ import lombok.*;
 @Table(name = "user_counters")
 public class UserCounters {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column
     private int albums;
@@ -35,8 +37,7 @@ public class UserCounters {
     @Column(name = "clips_followers")
     private int clipsFollowers;
 
-    @JsonBackReference
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }
