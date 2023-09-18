@@ -1,6 +1,6 @@
 package com.eventsvk.services.Event.Impl;
 
-import com.eventsvk.entity.Event.Event;
+import com.eventsvk.entity.event.Event;
 import com.eventsvk.repositories.EventRepository;
 import com.eventsvk.services.Event.EventService;
 import org.springframework.beans.factory.annotation.Autowired;

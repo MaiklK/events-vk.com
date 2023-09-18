@@ -1,6 +1,6 @@
 package com.eventsvk.services.Event;
 
-import com.eventsvk.entity.Event.Event;
+import com.eventsvk.entity.event.Event;
 
 import java.util.List;
 
