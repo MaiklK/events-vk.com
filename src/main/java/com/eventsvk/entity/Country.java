@@ -23,4 +23,9 @@ public class Country {
     @JsonBackReference
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
     private List<User> user;
+
+    public Country(int id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }

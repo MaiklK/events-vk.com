@@ -5,6 +5,7 @@ import com.eventsvk.repositories.CityRepository;
 import com.eventsvk.services.CountryService;
 import com.eventsvk.services.RegionService;
 import com.eventsvk.services.User.RoleService;
+import com.eventsvk.services.User.UserService;
 import com.eventsvk.services.VkontakteService;
 import com.vk.api.sdk.client.actors.UserActor;
 import jakarta.annotation.PostConstruct;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class Init {
 
     private final RoleService roleService;
+    private final UserService userService;
     private final VkontakteService vkontakteService;
     private final CountryService countryService;
     private final CityRepository cityRepository;
@@ -31,18 +33,22 @@ public class Init {
     public void initRolesAndUsers() {
 
         Role adminRole = new Role("ADMIN");
-//        Set<Role> adminRoles = new HashSet<>(Set.of(adminRole));
-
-        roleService.saveRole(adminRole);
-
         Role userRole = new Role("USER");
 
         roleService.saveRole(userRole);
+        roleService.saveRole(adminRole);
 
+//        User admin = User.builder()
+//                .vkid("420214979")
+//                .password("admin")
+//                .roles(Set.of(adminRole))
+//                .city(new City(1, "Москва"))
+//                .country(new Country(1, "Россия"))
+//                .userPersonal(new UserPersonal())
+//                .counters(new UserCounters())
+//                .build();
+//
 //        userService.saveUser(admin);
-
-//        User user = new User("user", "user", (byte) 20, "u@u.ru", "user", userRoles);
-
     }
 
     public void fillCountryDB() {

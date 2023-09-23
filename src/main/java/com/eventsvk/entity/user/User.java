@@ -33,8 +33,8 @@ public class User implements UserDetails {
     private String mobilePhone;
     @Column
     private String password;
-    @Column(name = "code_flow")
-    private String codeFlow;
+    @Column(name = "access token")
+    private String accessToken;
     @Column(name = "birthday_date")
     private String birthdayDate;
     @Column

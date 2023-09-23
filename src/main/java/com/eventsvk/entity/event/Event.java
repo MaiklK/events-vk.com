@@ -12,6 +12,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "events")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)

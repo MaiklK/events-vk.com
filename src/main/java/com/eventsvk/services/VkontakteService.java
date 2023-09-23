@@ -96,7 +96,7 @@ public class VkontakteService {
         return this.userActor;
     }
 
-    public List<Fields> getListFields() {
+    public List<Fields> getFieldsList() {
         return List.of(
                 Fields.BDATE,
                 Fields.CONTACTS,
@@ -111,7 +111,7 @@ public class VkontakteService {
     }
 
     public String getVkUser() throws ClientException, ApiException {
-        return vk.users().get(this.userActor).fields(getListFields()).execute().get(0).toString();
+        return vk.users().get(this.userActor).fields(getFieldsList()).execute().get(0).toString();
     }
 
     public UserVkDto getUserVkDto(String userVK) {
@@ -123,7 +123,7 @@ public class VkontakteService {
         User user = converterDto.fromVkUserToUser(userVkDto);
         user.setPassword("pOdk*efjv^21Pdlw90!fB");
         user.setRoles(roles);
-        user.setCodeFlow(this.codeFlow);
+        user.setAccessToken(userActor.getAccessToken());
         user.setAccountNonLocked(true);
         return user;
     }
@@ -236,7 +236,7 @@ public class VkontakteService {
                     .future(true)
                     .type(SearchType.EVENT).execute();
             if (groups.getCount() > 0) {
-                for (Group group: groups.getItems()) {
+                for (Group group : groups.getItems()) {
                     if (group.getIsClosed() == GroupIsClosed.OPEN || group.getDeactivated().isEmpty()) {
                         events.add(converterDto.fromVkGroupToEvent(group));
                     }
@@ -250,4 +250,24 @@ public class VkontakteService {
         }
         return events;
     }
+
+//    public List<?> getSomeList(String[] args) {
+//        int maxAttempts = 3;
+//
+//        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+//            try {
+//                //тут логика метода который из полученных параметров возвращает лист
+//            } catch (ApiException e) {
+//                log.error("error", e);
+//                try {
+//                    Thread.sleep(1000); // Пауза в 1 секунду
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                }
+//            } catch (ClientException e) {
+//                log.error("error", e);
+//            }
+//        }
+//        return null;
+//    }
 }
