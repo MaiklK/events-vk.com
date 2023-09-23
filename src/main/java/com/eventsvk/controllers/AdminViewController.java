@@ -17,7 +17,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-public class viewController {
+public class AdminViewController {
     private final VkontakteService vkontakteService;
     private final UserService userService;
     private final RoleService roleService;

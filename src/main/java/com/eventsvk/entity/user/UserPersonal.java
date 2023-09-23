@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "user_personal")
 public class UserPersonal {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column
     private int political;

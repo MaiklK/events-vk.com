@@ -37,6 +37,8 @@ public class Event {
     private String publicDateLabel;
     @Column
     private String site;
+    @Column
+    private String activity;
     @Column(name = "start_date ")
     private int startDate;
     @Column(name = "finish_date")

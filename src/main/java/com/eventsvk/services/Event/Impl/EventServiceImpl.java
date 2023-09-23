@@ -45,4 +45,9 @@ public class EventServiceImpl implements EventService {
         updateEvent.setUuid(eventUuid);
         eventRepository.save(updateEvent);
     }
+
+    @Override
+    public List<Event> getEventsFromVK(int cityId, int countryId, String query) {
+        return null;
+    }
 }

@@ -4,6 +4,7 @@ import com.eventsvk.dto.UserVkDto;
 import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
 import com.eventsvk.entity.Region;
+import com.eventsvk.entity.event.Event;
 import com.eventsvk.entity.user.Role;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
@@ -19,6 +20,10 @@ import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.database.responses.GetCitiesResponse;
 import com.vk.api.sdk.objects.database.responses.GetCountriesResponse;
 import com.vk.api.sdk.objects.database.responses.GetRegionsResponse;
+import com.vk.api.sdk.objects.groups.Group;
+import com.vk.api.sdk.objects.groups.GroupIsClosed;
+import com.vk.api.sdk.objects.groups.SearchType;
+import com.vk.api.sdk.objects.groups.responses.SearchResponse;
 import com.vk.api.sdk.objects.users.Fields;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -195,9 +200,8 @@ public class VkontakteService {
         try {
             GetCitiesResponse citiesResponse = vk.database().getCities(userActor,
                     countryId).needAll(true).count(1).execute();
-            int count = citiesResponse.getCount();
-            if (count != 0) {
-                for (int i = 0; i < count; i += 1000) {
+            if (citiesResponse.getCount() != 0) {
+                for (int i = 0; i < citiesResponse.getCount(); i += 1000) {
                     citiesResponse = vk.database().getCities(userActor,
                             countryId).count(1000).offset(i).needAll(true).execute();
                     for (com.vk.api.sdk.objects.database.City city : citiesResponse.getItems()) {
@@ -220,5 +224,30 @@ public class VkontakteService {
         System.out.printf("Total time work 'getAllCityFromDBVK' in millisecond: %d, for country: %d\n",
                 endTimestamp - beginTimestamp, countryId);
         return cities;
+    }
+
+    public List<Event> getEventsByQuery(String query) {
+        List<Event> events = new ArrayList<>();
+        try {
+            SearchResponse groups = vk.groups().search(userActor, query)
+                    .count(1000)
+                    .cityId(1)
+                    .countryId(1)
+                    .future(true)
+                    .type(SearchType.EVENT).execute();
+            if (groups.getCount() > 0) {
+                for (Group group: groups.getItems()) {
+                    if (group.getIsClosed() == GroupIsClosed.OPEN || group.getDeactivated().isEmpty()) {
+                        events.add(converterDto.fromVkGroupToEvent(group));
+                    }
+                }
+            }
+
+        } catch (ClientException e) {
+            throw new RuntimeException(e);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
+        return events;
     }
 }

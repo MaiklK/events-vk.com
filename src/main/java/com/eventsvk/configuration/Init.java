@@ -69,6 +69,10 @@ public class Init {
                 , endTimestamp - beginTimestamp, countryId);
     }
 
+    public void getEventByQuery(String query) {
+        vkontakteService.getEventsByQuery(query);
+    }
+
     /*Метод fillCityDB заполняет базу всеми городами из БД Вконтакте, примерно 1_200_000 строк,
     ограничение вконтакте 20_000 в сутки,
     работает только если заполнена БД стран
@@ -78,6 +82,7 @@ public class Init {
         UserActor userActor = new UserActor(0, ACCESS_TOKEN);
         vkontakteService.setUserActor(userActor);
         initRolesAndUsers();
+        getEventByQuery("ааа");
 //        fillCountryDB();
 //        for (int countryId : countryService.getAllCountryId()) {
 //            fillRegionBD(countryId);
