@@ -8,6 +8,8 @@ public interface EventService {
 
     void saveEvent(Event event);
 
+    void saveAllEvents(List<Event> eventList);
+
     Event findEventByUuid(String eventUuid);
 
     List<Event> getAllEvents();

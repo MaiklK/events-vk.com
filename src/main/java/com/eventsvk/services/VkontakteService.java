@@ -5,12 +5,12 @@ import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
 import com.eventsvk.entity.Region;
 import com.eventsvk.entity.event.Event;
-import com.eventsvk.entity.user.Role;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
 import com.eventsvk.services.User.RoleService;
 import com.eventsvk.services.User.UserService;
 import com.eventsvk.util.ConverterDto;
+import com.eventsvk.util.function.MethodCaller;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
@@ -18,29 +18,26 @@ import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.exceptions.OAuthException;
 import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.database.responses.GetCitiesResponse;
-import com.vk.api.sdk.objects.database.responses.GetCountriesResponse;
-import com.vk.api.sdk.objects.database.responses.GetRegionsResponse;
 import com.vk.api.sdk.objects.groups.Group;
-import com.vk.api.sdk.objects.groups.GroupIsClosed;
 import com.vk.api.sdk.objects.groups.SearchType;
-import com.vk.api.sdk.objects.groups.responses.SearchResponse;
 import com.vk.api.sdk.objects.users.Fields;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
 @Getter
 @Setter
+@Slf4j
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class VkontakteService {
@@ -55,6 +52,10 @@ public class VkontakteService {
     private String REDIRECT_URI;
     @Value("${scope}")
     private String SCOPE;
+    @Value("${pause_between_request}")
+    private int PAUSE_BETWEEN_REQUEST;
+    @Value("${max_attempts}")
+    private int MAX_ATTEMPTS;
     private String codeFlow;
     private UserActor userActor;
     private final ConverterDto converterDto;
@@ -73,27 +74,23 @@ public class VkontakteService {
                 .toUriString();
     }
 
-    public UserAuthResponse getUserAuthResponse(String codeFlow) {
+    public void getUserAuthResponse(String codeFlow) {
         this.codeFlow = codeFlow;
-        UserAuthResponse authResponse = null;
+        UserAuthResponse authResponse;
         try {
             authResponse = vk.oAuth()
                     .userAuthorizationCodeFlow(APP_ID, CLIENT_SECRET, REDIRECT_URI, codeFlow)
                     .execute();
+            getUserActor(authResponse);
         } catch (OAuthException e) {
-            e.getRedirectUri();//TODO прикрутить логирование
-        } catch (ClientException e) {
-            e.printStackTrace();//TODO прикрутить логирование
-        } catch (ApiException e) {
-            e.printStackTrace();//TODO прикрутить логирование
+            log.error("Ошибка авторизации ссылка на {}, ошибка {}", e.getRedirectUri(), e.getMessage());
+        } catch (ClientException | ApiException e) {
+            log.error("Произошла ошибка при попытке авторизоваться {}", e.getMessage());
         }
-        assert authResponse != null;
-        return authResponse;
     }
 
-    public UserActor getUserActor(UserAuthResponse userAuthVK) {
+    public void getUserActor(UserAuthResponse userAuthVK) {
         this.userActor = new UserActor(userAuthVK.getUserId(), userAuthVK.getAccessToken());
-        return this.userActor;
     }
 
     public List<Fields> getFieldsList() {
@@ -111,7 +108,8 @@ public class VkontakteService {
     }
 
     public String getVkUser() throws ClientException, ApiException {
-        return vk.users().get(this.userActor).fields(getFieldsList()).execute().get(0).toString();
+        return vk.users().get(this.userActor).
+                fields(getFieldsList()).execute().get(0).toString();
     }
 
     public UserVkDto getUserVkDto(String userVK) {
@@ -119,155 +117,150 @@ public class VkontakteService {
     }
 
     public User getUser(UserVkDto userVkDto) {
-        Set<Role> roles = new HashSet<>(List.of(roleService.getRoleById(1)));
         User user = converterDto.fromVkUserToUser(userVkDto);
         user.setPassword("pOdk*efjv^21Pdlw90!fB");
-        user.setRoles(roles);
+        user.setRoles(Set.of(roleService.getRoleById(1)));
         user.setAccessToken(userActor.getAccessToken());
         user.setAccountNonLocked(true);
         return user;
     }
 
+    public void pauseRequest() {
+        try {
+            Thread.sleep(PAUSE_BETWEEN_REQUEST);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<?> apiVkMethod(int maxAttempts, MethodCaller methodCaller, String[] args) {
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            try {
+                return methodCaller.callMethod(args);
+            } catch (ApiException | ClientException ex) {
+                pauseRequest();
+                log.error("Ошибка {}", ex.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public List<com.vk.api.sdk.objects.base.Country> getCountriesResponse(String[] args) throws ClientException, ApiException {
+        return vk.database()
+                .getCountries(userActor)
+                .count(1000)
+                .needAll(true)
+                .code(args[0]).execute().getItems();
+    }
+
+    public List<com.vk.api.sdk.objects.database.Region> getRegionsResponse(String[] args)
+            throws ClientException, ApiException {
+        return vk.database()
+                .getRegions(userActor, Integer.parseInt(args[0]))
+                .count(1000)
+                .execute().getItems();
+    }
+
+    public List<com.vk.api.sdk.objects.database.City> getCitiesResponse(String[] args)
+            throws ClientException, ApiException {
+        List<com.vk.api.sdk.objects.database.City> cities = new ArrayList<>();
+        GetCitiesResponse citiesResponse = vk.database().getCities(userActor,
+                Integer.parseInt(args[0])).needAll(true).count(1).execute();
+        pauseRequest();
+        for (int i = 0; i < citiesResponse.getCount(); i += 1000) {
+            citiesResponse = vk.database().getCities(userActor,
+                    Integer.parseInt(args[0])).count(1000).offset(i).needAll(true).execute();
+            cities.addAll(citiesResponse.getItems());
+            pauseRequest();
+        }
+
+        return cities;
+    }
+
+    public List<Group> getSearchResponseGroups(String[] args) throws ClientException, ApiException {
+        return vk.groups().search(userActor, args[0])
+                .count(1000)
+                .cityId(Integer.valueOf(args[1]))
+                .countryId(Integer.valueOf(args[2]))
+                .future(true)
+                .type(SearchType.EVENT).execute().getItems();
+    }
+
+    public List<Country> convertFromVkCountries(List<?> countryList) {
+        List<Country> countries = new ArrayList<>();
+        if (!countryList.isEmpty()) {
+            log.info("Найдено: {} событий", countryList.size());
+            for (Object object : countryList) {
+                Country country = converterDto.fromVKCountryToCountry(object);
+                if (country.getId() != 0) {
+                    countries.add(country);
+                }
+            }
+        }
+        return countries;
+    }
+
+    public List<Region> convertFromVkRegion(List<?> regionList) {
+        List<Region> regions = new ArrayList<>();
+        if (!regionList.isEmpty()) {
+            for (Object object : regionList) {
+                regions.add(converterDto.fromVkRegionToRegion(object));
+            }
+        }
+        return regions;
+    }
+
+    public List<City> converterFromVkCity(List<?> citiesList) {
+        List<City> cities = new ArrayList<>();
+        if (!citiesList.isEmpty()) {
+            for (Object object : citiesList) {
+                cities.add(converterDto.fromVKCityToCity(object));
+            }
+        }
+        return cities;
+    }
+
+    public List<Event> converterFromVkGroup(List<?> eventList, String[] args) {
+        List<Event> events = new ArrayList<>();
+        if (!eventList.isEmpty()) {
+            for (Object object : eventList) {
+                Event event = converterDto.fromVkGroupToEvent(object);
+                event.setCityId(Integer.parseInt(args[1]));
+                events.add(event);
+            }
+        }
+        return events;
+    }
+
+    public List<Country> getCountriesByCodes(String[] args) {
+        return convertFromVkCountries(apiVkMethod(MAX_ATTEMPTS, this::getCountriesResponse, args));
+    }
+
+    public List<Region> getRegionsByCountryId(String[] args) {
+        return convertFromVkRegion(apiVkMethod(MAX_ATTEMPTS, this::getRegionsResponse, args));
+    }
+
+    public List<City> getCitiesByCountryId(String[] args) {
+        return converterFromVkCity(apiVkMethod(MAX_ATTEMPTS, this::getCitiesResponse, args));
+    }
+
+    public List<Event> getEventsByQuery(String[] args) {
+        return converterFromVkGroup(apiVkMethod(MAX_ATTEMPTS, this::getSearchResponseGroups, args), args);
+    }
+
+
     public CustomAuthentication getCustomAuthentication(String codeFlow) {
         try {
-            UserAuthResponse authResponse = getUserAuthResponse(codeFlow);
-            UserActor userActor = getUserActor(authResponse);
+            getUserAuthResponse(codeFlow);
             String vkUser = getVkUser();
             UserVkDto userVkDto = getUserVkDto(vkUser);
             User foundUser = userService.findUserByVkid(userVkDto.getVkid());
             User user = foundUser != null ? foundUser : getUser(userVkDto);
             userService.saveUser(user);
             return new CustomAuthentication(user);
-        } catch (ClientException e) {
-            e.printStackTrace();//TODO сделать логирование
-        } catch (ApiException e) {
-            e.printStackTrace();//TODO сделать логирование
+        } catch (ClientException | ApiException e) {
+            log.error("Ошибка при попытке аутентификации: {}", e.getMessage());
         }
         return null;
     }
-
-    public List<Country> getAllCountriesFromVkDb(String countriesCode) {
-        List<Country> countries = new ArrayList<>();
-        try {
-            GetCountriesResponse countriesResponse = vk.database()
-                    .getCountries(userActor)
-                    .count(1000)
-                    .needAll(true)
-                    .code(countriesCode).execute();
-            if (countriesResponse.getCount() != 0) {
-                for (com.vk.api.sdk.objects.base.Country country : countriesResponse.getItems()) {
-                    if (country.getId() > 0) {
-                        countries.add(converterDto.fromVKCountryToCountry(country));
-                    }
-                }
-            }
-
-        } catch (ApiException e) {
-            e.printStackTrace();//TODO сделать логирование
-        } catch (ClientException e) {
-            e.printStackTrace();//TODO сделать логирование
-        }
-        return countries;
-    }
-
-    public List<Region> getAllRegion(int countryId) {
-        long beginTimestamp = System.currentTimeMillis();
-        List<Region> regions = new ArrayList<>();
-        try {
-            GetRegionsResponse regionsResponse = vk.database()
-                    .getRegions(userActor, countryId)
-                    .count(1000)
-                    .execute();
-            if (regionsResponse.getCount() != 0) {
-                for (com.vk.api.sdk.objects.database.Region region : regionsResponse.getItems()) {
-                    if (region.getId() > 0) {
-                        regions.add(converterDto.fromVkRegionToRegion(region));
-                    }
-                }
-            }
-
-        } catch (ApiException e) {
-            e.printStackTrace();//TODO сделать логирование
-        } catch (ClientException e) {
-            e.printStackTrace();//TODO сделать логирование
-        }
-        return regions;
-    }
-
-    public List<City> getAllCityFromDBVK(int countryId) {
-        long beginTimestamp = System.currentTimeMillis();
-        List<City> cities = new ArrayList<>();
-        try {
-            GetCitiesResponse citiesResponse = vk.database().getCities(userActor,
-                    countryId).needAll(true).count(1).execute();
-            if (citiesResponse.getCount() != 0) {
-                for (int i = 0; i < citiesResponse.getCount(); i += 1000) {
-                    citiesResponse = vk.database().getCities(userActor,
-                            countryId).count(1000).offset(i).needAll(true).execute();
-                    for (com.vk.api.sdk.objects.database.City city : citiesResponse.getItems()) {
-                        if (city.getTitle() != null) {
-                            cities.add(converterDto.fromVKCityToCity(city));
-                        }
-
-                    }
-                    Thread.sleep(1000);
-                }
-            }
-        } catch (ApiException e) {
-            e.printStackTrace();//TODO сделать логирование
-        } catch (ClientException e) {
-            e.printStackTrace();//TODO сделать логирование
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);//TODO сделать логирование
-        }
-        long endTimestamp = System.currentTimeMillis();
-        System.out.printf("Total time work 'getAllCityFromDBVK' in millisecond: %d, for country: %d\n",
-                endTimestamp - beginTimestamp, countryId);
-        return cities;
-    }
-
-    public List<Event> getEventsByQuery(String query) {
-        List<Event> events = new ArrayList<>();
-        try {
-            SearchResponse groups = vk.groups().search(userActor, query)
-                    .count(1000)
-                    .cityId(1)
-                    .countryId(1)
-                    .future(true)
-                    .type(SearchType.EVENT).execute();
-            if (groups.getCount() > 0) {
-                for (Group group : groups.getItems()) {
-                    if (group.getIsClosed() == GroupIsClosed.OPEN || group.getDeactivated().isEmpty()) {
-                        events.add(converterDto.fromVkGroupToEvent(group));
-                    }
-                }
-            }
-
-        } catch (ClientException e) {
-            throw new RuntimeException(e);
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        }
-        return events;
-    }
-
-//    public List<?> getSomeList(String[] args) {
-//        int maxAttempts = 3;
-//
-//        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-//            try {
-//                //тут логика метода который из полученных параметров возвращает лист
-//            } catch (ApiException e) {
-//                log.error("error", e);
-//                try {
-//                    Thread.sleep(1000); // Пауза в 1 секунду
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//            } catch (ClientException e) {
-//                log.error("error", e);
-//            }
-//        }
-//        return null;
-//    }
 }

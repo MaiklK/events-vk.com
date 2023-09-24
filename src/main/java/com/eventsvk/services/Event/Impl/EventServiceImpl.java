@@ -3,6 +3,7 @@ package com.eventsvk.services.Event.Impl;
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.repositories.EventRepository;
 import com.eventsvk.services.Event.EventService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,20 +13,25 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-
-    @Autowired
-    public EventServiceImpl(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
 
     @Override
     @Transactional
     public void saveEvent(Event event) {
         eventRepository.save(event);
     }
+
+    @Override
+    @Transactional
+    public void saveAllEvents(List<Event> eventList) {
+        eventRepository.saveAll(eventList);
+    }
+
+    @Transactional
+
 
     @Override
     public Event findEventByUuid(String eventUuid) {

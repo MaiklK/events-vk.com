@@ -27,9 +27,4 @@ public class City {
     @JsonBackReference
     @OneToMany(mappedBy = "city", fetch = FetchType.LAZY)
     private List<User> users;
-
-    public City(int id, String title) {
-        this.id = id;
-        this.title = title;
-    }
 }

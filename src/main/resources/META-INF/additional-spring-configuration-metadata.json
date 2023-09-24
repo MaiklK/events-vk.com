@@ -29,5 +29,15 @@
       "name": "acces_token",
       "type": "java.lang.String",
       "description": "Description for acces_token."
+    },
+    {
+      "name": "pause_between_request",
+      "type": "java.lang.String",
+      "description": "Description for pause_between_request."
+    },
+    {
+      "name": "max_attempts",
+      "type": "java.lang.String",
+      "description": "Description for max_attempts."
     }
   ] }

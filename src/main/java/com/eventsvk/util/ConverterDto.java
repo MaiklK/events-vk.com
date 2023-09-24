@@ -7,7 +7,6 @@ import com.eventsvk.entity.Region;
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.entity.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vk.api.sdk.objects.groups.Group;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -35,19 +34,19 @@ public class ConverterDto {
         return modelMapper.map(user, UserVkDto.class);
     }
 
-    public City fromVKCityToCity(com.vk.api.sdk.objects.database.City city) {
+    public City fromVKCityToCity(Object city) {
         return modelMapper.map(city, City.class);
     }
 
-    public Country fromVKCountryToCountry(com.vk.api.sdk.objects.base.Country country) {
+    public Country fromVKCountryToCountry(Object country) {
         return modelMapper.map(country, Country.class);
     }
 
-    public Region fromVkRegionToRegion(com.vk.api.sdk.objects.database.Region region) {
+    public Region fromVkRegionToRegion(Object region) {
         return modelMapper.map(region, Region.class);
     }
 
-    public Event fromVkGroupToEvent(Group group) {
+    public Event fromVkGroupToEvent(Object group) {
         return modelMapper.map(group, Event.class);
     }
     //TODO дописать сущности, их DTO и конверторы к ним

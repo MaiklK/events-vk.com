@@ -23,7 +23,7 @@ public class Event {
     @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private String uuid;
     @Column(name = "event_vkid")
-    private String eventVkid;
+    private String id;
     @Column
     private String name;
     @Column(name = "screen_name")
@@ -46,6 +46,8 @@ public class Event {
     private int finishDate;
     @Column
     private String status;
+    @Column(name = "city_id")
+    private int cityId;
 
 
 
