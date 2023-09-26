@@ -189,7 +189,6 @@ public class VkontakteService {
     public List<Country> convertFromVkCountries(List<?> countryList) {
         List<Country> countries = new ArrayList<>();
         if (!countryList.isEmpty()) {
-            log.info("Найдено: {} событий", countryList.size());
             for (Object object : countryList) {
                 Country country = converterDto.fromVKCountryToCountry(object);
                 if (country.getId() != 0) {
@@ -247,7 +246,6 @@ public class VkontakteService {
     public List<Event> getEventsByQuery(String[] args) {
         return converterFromVkGroup(apiVkMethod(MAX_ATTEMPTS, this::getSearchResponseGroups, args), args);
     }
-
 
     public CustomAuthentication getCustomAuthentication(String codeFlow) {
         try {

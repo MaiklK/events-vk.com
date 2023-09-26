@@ -28,7 +28,7 @@ public class DebugAllMethods {
 
     @AfterReturning(value = "allMethods()", returning = "returnValue")
     public void logAfterReturning(JoinPoint joinPoint, Object returnValue) {
-        log.debug("Метод {} в классе {}, метод вернул: {}",
+        log.debug("Метод {} в классе {}, отработал и вернул: {}",
                 joinPoint.getSignature().getName(),
                 joinPoint.getTarget().getClass().getSimpleName(),
                 returnValue);

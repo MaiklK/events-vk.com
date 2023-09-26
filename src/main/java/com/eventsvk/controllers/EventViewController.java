@@ -1,7 +1,6 @@
 package com.eventsvk.controllers;
 
 import com.eventsvk.entity.event.Event;
-import com.eventsvk.services.Event.EventService;
 import com.eventsvk.services.VkontakteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

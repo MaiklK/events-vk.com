@@ -1,7 +1,5 @@
 package com.eventsvk.entity.event;
 
-import com.eventsvk.entity.City;
-import com.eventsvk.entity.Country;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;

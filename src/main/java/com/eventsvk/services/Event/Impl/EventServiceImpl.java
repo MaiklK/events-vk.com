@@ -4,7 +4,6 @@ import com.eventsvk.entity.event.Event;
 import com.eventsvk.repositories.EventRepository;
 import com.eventsvk.services.Event.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

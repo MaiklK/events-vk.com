@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Aspect
 @Component
 @Slf4j
-public class VkExceptions {
+public class VkServiceLogging {
 
     @Pointcut("within(com.eventsvk.services.VkontakteService)")
     public void isVkService() {
@@ -47,7 +47,4 @@ public class VkExceptions {
     public void logApiAuthException(JoinPoint joinPoint, ApiAuthException exception) {
         logError(joinPoint, exception);
     }
-
-
-
 }

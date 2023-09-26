@@ -93,7 +93,7 @@ public class Init {
 //            vkontakteService.pauseRequest();
 //        }
 //        fillCityDB(19);
-        getEventByQuery("ааа", 1, 1);
+//        getEventByQuery("ааа", 1, 1);
 //        for (int countryId : countryService.getAllCountryId()) {
 //            fillCityDB(countryId);
 //        }

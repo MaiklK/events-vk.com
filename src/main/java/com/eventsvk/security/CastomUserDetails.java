@@ -1,11 +1,13 @@
 package com.eventsvk.security;
 
 import com.eventsvk.entity.user.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Getter
 public record CastomUserDetails(User user) implements UserDetails {
 
     @Override
@@ -43,7 +45,4 @@ public record CastomUserDetails(User user) implements UserDetails {
         return true;
     }
 
-    public User getUser() {
-        return user;
-    }
 }

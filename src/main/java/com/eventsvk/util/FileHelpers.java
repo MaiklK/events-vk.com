@@ -37,7 +37,11 @@ public class FileHelpers {
         // Переименовываем временный файл в исходное имя файла
         File file = new File(filePath);
         File tempFile = new File(filePath + ".tmp");
-        tempFile.renameTo(file);
+        boolean renameSuccess = tempFile.renameTo(file);
+        if (!renameSuccess) {
+            throw new RuntimeException("Файл не перезаписался");
+            // TODO: Logging or error handling
+        }
 
         return line.toString();
     }

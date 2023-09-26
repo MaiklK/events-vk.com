@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "cities")
+@Table(name = "dictionary_requests")
 @Getter
 @Setter
 @NoArgsConstructor

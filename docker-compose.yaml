@@ -5,12 +5,21 @@ services:
     container_name: postgres_db
     restart: unless-stopped
     ports:
-      - 5432:5432
+      - '5432:5432'
     environment:
      POSTGRES_DB: event_vk
      POSTGRES_PASSWORD: postgres
      POSTGRES_USER: postgres
      PGDATA: /var/lib/postgresql/data
+
+  mySQL:
+    image: mysql:8.0
+    container_name: mySQL_DB
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_DATABASE=root
+      - MYSQL_ROOT_PASSWORD=asdfrewq11234
 
 #  events-vk.com:
 #    image: events-vk.com:latest
@@ -25,14 +34,14 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - 9090:9090
+      - '9090:9090'
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
 
   grafana:
     image: grafana/grafana
     ports:
-      - 3000:3000
+      - '3000:3000'
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
