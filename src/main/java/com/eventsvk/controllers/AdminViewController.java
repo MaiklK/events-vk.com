@@ -66,7 +66,6 @@ public class AdminViewController {
 
     @PutMapping("/user/update")
     public String updateUser(@RequestBody User user) {
-        System.out.println(user);
         userService.updateUser(user);
         return "redirect:/admin";
     }

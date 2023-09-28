@@ -53,6 +53,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> getEventsFromVK(int cityId, int countryId, String query) {
-        return null;
+        return eventRepository.findAll();
     }
 }
