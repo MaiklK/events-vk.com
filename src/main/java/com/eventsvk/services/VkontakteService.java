@@ -108,8 +108,11 @@ public class VkontakteService {
     }
 
     public String getVkUser() throws ClientException, ApiException {
-        return vk.users().get(this.userActor).
-                fields(getFieldsList()).execute().get(0).toString();
+        return vk.users().get(this.userActor)
+                .fields(getFieldsList())
+                .execute()
+                .get(0)
+                .toString();
     }
 
     public UserVkDto getUserVkDto(String userVK) {
@@ -129,20 +132,23 @@ public class VkontakteService {
         try {
             Thread.sleep(PAUSE_BETWEEN_REQUEST);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error("Ошибка ожидания: {}", e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
     public List<?> apiVkMethod(int maxAttempts, MethodCaller methodCaller, String[] args) {
+        List<?> list = new ArrayList<>();
         for (int attempt = 0; attempt < maxAttempts; attempt++) {
             try {
-                return methodCaller.callMethod(args);
+                list = methodCaller.callMethod(args);
+                return list;
             } catch (ApiException | ClientException ex) {
                 pauseRequest();
                 log.error("Ошибка {}", ex.getMessage());
             }
         }
-        return null;
+        return list;
     }
 
     public List<com.vk.api.sdk.objects.base.Country> getCountriesResponse(String[] args) throws ClientException, ApiException {
@@ -150,7 +156,9 @@ public class VkontakteService {
                 .getCountries(userActor)
                 .count(1000)
                 .needAll(true)
-                .code(args[0]).execute().getItems();
+                .code(args[0])
+                .execute()
+                .getItems();
     }
 
     public List<com.vk.api.sdk.objects.database.Region> getRegionsResponse(String[] args)
@@ -158,22 +166,27 @@ public class VkontakteService {
         return vk.database()
                 .getRegions(userActor, Integer.parseInt(args[0]))
                 .count(1000)
-                .execute().getItems();
+                .execute()
+                .getItems();
     }
 
     public List<com.vk.api.sdk.objects.database.City> getCitiesResponse(String[] args)
             throws ClientException, ApiException {
         List<com.vk.api.sdk.objects.database.City> cities = new ArrayList<>();
-        GetCitiesResponse citiesResponse = vk.database().getCities(userActor,
-                Integer.parseInt(args[0])).needAll(true).count(1).execute();
+        GetCitiesResponse citiesResponse = vk.database().getCities(userActor, Integer.parseInt(args[0]))
+                .needAll(true)
+                .count(1)
+                .execute();
         pauseRequest();
         for (int i = 0; i < citiesResponse.getCount(); i += 1000) {
-            citiesResponse = vk.database().getCities(userActor,
-                    Integer.parseInt(args[0])).count(1000).offset(i).needAll(true).execute();
+            citiesResponse = vk.database().getCities(userActor, Integer.parseInt(args[0]))
+                    .count(1000)
+                    .offset(i)
+                    .needAll(true)
+                    .execute();
             cities.addAll(citiesResponse.getItems());
             pauseRequest();
         }
-
         return cities;
     }
 
@@ -183,7 +196,9 @@ public class VkontakteService {
                 .cityId(Integer.valueOf(args[1]))
                 .countryId(Integer.valueOf(args[2]))
                 .future(true)
-                .type(SearchType.EVENT).execute().getItems();
+                .type(SearchType.EVENT)
+                .execute()
+                .getItems();
     }
 
     public List<Country> convertFromVkCountries(List<?> countryList) {
