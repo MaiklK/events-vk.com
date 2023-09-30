@@ -2,8 +2,6 @@ package com.eventsvk.services;
 
 import com.eventsvk.dto.UserVkDto;
 import com.eventsvk.entity.City;
-import com.eventsvk.entity.Country;
-import com.eventsvk.entity.Region;
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
@@ -15,7 +13,6 @@ import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
-import com.vk.api.sdk.exceptions.OAuthException;
 import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.database.responses.GetCitiesResponse;
 import com.vk.api.sdk.objects.groups.Group;
@@ -74,19 +71,13 @@ public class VkontakteService {
                 .toUriString();
     }
 
-    public void getUserAuthResponse(String codeFlow) {
+    public void getUserAuthResponse(String codeFlow) throws ApiException, ClientException {
         this.codeFlow = codeFlow;
         UserAuthResponse authResponse;
-        try {
-            authResponse = vk.oAuth()
-                    .userAuthorizationCodeFlow(APP_ID, CLIENT_SECRET, REDIRECT_URI, codeFlow)
-                    .execute();
-            getUserActor(authResponse);
-        } catch (OAuthException e) {
-            log.error("Ошибка авторизации ссылка на {}, ошибка {}", e.getRedirectUri(), e.getMessage());
-        } catch (ClientException | ApiException e) {
-            log.error("Произошла ошибка при попытке авторизоваться {}", e.getMessage());
-        }
+        authResponse = vk.oAuth()
+                .userAuthorizationCodeFlow(APP_ID, CLIENT_SECRET, REDIRECT_URI, codeFlow)
+                .execute();
+        getUserActor(authResponse);
     }
 
     public void getUserActor(UserAuthResponse userAuthVK) {
@@ -128,13 +119,8 @@ public class VkontakteService {
         return user;
     }
 
-    public void pauseRequest() {
-        try {
-            Thread.sleep(PAUSE_BETWEEN_REQUEST);
-        } catch (InterruptedException e) {
-            log.error("Ошибка ожидания: {}", e.getMessage());
-            Thread.currentThread().interrupt();
-        }
+    public void pauseRequest() throws InterruptedException {
+        Thread.sleep(PAUSE_BETWEEN_REQUEST);
     }
 
     public List<?> apiVkMethod(int maxAttempts, MethodCaller methodCaller, String[] args) {
@@ -143,16 +129,14 @@ public class VkontakteService {
             try {
                 list = methodCaller.callMethod(args);
                 return list;
-            } catch (ApiException | ClientException ex) {
-                pauseRequest();
-                log.error("Ошибка {}", ex.getMessage());
+            } catch (ApiException | ClientException | InterruptedException ignored) {
             }
         }
         return list;
     }
 
     public List<com.vk.api.sdk.objects.database.City> getCitiesResponse(String[] args)
-            throws ClientException, ApiException {
+            throws ClientException, ApiException, InterruptedException {
         List<com.vk.api.sdk.objects.database.City> cities = new ArrayList<>();
         GetCitiesResponse citiesResponse = vk.database().getCities(userActor, Integer.parseInt(args[0]))
                 .needAll(true)
@@ -221,7 +205,7 @@ public class VkontakteService {
             User user = foundUser != null ? foundUser : getUser(userVkDto);
             userService.saveUser(user);
             return new CustomAuthentication(user);
-        } catch (ClientException | ApiException e) {
+        } catch (Throwable e) {
             log.error("Ошибка при попытке аутентификации: {}", e.getMessage());
         }
         return null;

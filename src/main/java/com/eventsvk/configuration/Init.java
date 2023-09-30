@@ -2,6 +2,7 @@ package com.eventsvk.configuration;
 
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.repositories.CityRepository;
+import com.eventsvk.services.CountryService;
 import com.eventsvk.services.Event.EventService;
 import com.eventsvk.services.VkontakteService;
 import com.vk.api.sdk.client.actors.UserActor;
@@ -21,6 +22,7 @@ public class Init {
     private final VkontakteService vkontakteService;
     private final CityRepository cityRepository;
     private final EventService eventService;
+    private final CountryService countryService;
     @Value("${access_token}")
     private String ACCESS_TOKEN;
 

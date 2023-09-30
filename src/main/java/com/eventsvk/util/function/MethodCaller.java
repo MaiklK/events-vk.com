@@ -6,5 +6,5 @@ import com.vk.api.sdk.exceptions.ClientException;
 import java.util.List;
 
 public interface MethodCaller {
-    List<?> callMethod(String[] args) throws ClientException, ApiException;
+    List<?> callMethod(String[] args) throws ClientException, ApiException, InterruptedException;
 }

@@ -38,3 +38,59 @@ databaseChangeLog:
         - sqlFile:
             path: init_db/fill_region.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 4
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_1.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 5
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_2.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 6
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_3.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 7
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_4.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 8
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_5.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 9
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_6.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 10
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_7.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 11
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_cities_8.sql
+            relativeToChangelogFile: true
