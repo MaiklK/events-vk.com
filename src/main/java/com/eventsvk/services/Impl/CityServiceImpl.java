@@ -15,7 +15,6 @@ import java.util.List;
 public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
-
     @Override
     @Transactional
     public void saveCity(City city) {

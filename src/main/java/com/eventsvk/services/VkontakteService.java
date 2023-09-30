@@ -151,25 +151,6 @@ public class VkontakteService {
         return list;
     }
 
-    public List<com.vk.api.sdk.objects.base.Country> getCountriesResponse(String[] args) throws ClientException, ApiException {
-        return vk.database()
-                .getCountries(userActor)
-                .count(1000)
-                .needAll(true)
-                .code(args[0])
-                .execute()
-                .getItems();
-    }
-
-    public List<com.vk.api.sdk.objects.database.Region> getRegionsResponse(String[] args)
-            throws ClientException, ApiException {
-        return vk.database()
-                .getRegions(userActor, Integer.parseInt(args[0]))
-                .count(1000)
-                .execute()
-                .getItems();
-    }
-
     public List<com.vk.api.sdk.objects.database.City> getCitiesResponse(String[] args)
             throws ClientException, ApiException {
         List<com.vk.api.sdk.objects.database.City> cities = new ArrayList<>();
@@ -201,29 +182,6 @@ public class VkontakteService {
                 .getItems();
     }
 
-    public List<Country> convertFromVkCountries(List<?> countryList) {
-        List<Country> countries = new ArrayList<>();
-        if (!countryList.isEmpty()) {
-            for (Object object : countryList) {
-                Country country = converterDto.fromVKCountryToCountry(object);
-                if (country.getId() != 0) {
-                    countries.add(country);
-                }
-            }
-        }
-        return countries;
-    }
-
-    public List<Region> convertFromVkRegion(List<?> regionList) {
-        List<Region> regions = new ArrayList<>();
-        if (!regionList.isEmpty()) {
-            for (Object object : regionList) {
-                regions.add(converterDto.fromVkRegionToRegion(object));
-            }
-        }
-        return regions;
-    }
-
     public List<City> converterFromVkCity(List<?> citiesList) {
         List<City> cities = new ArrayList<>();
         if (!citiesList.isEmpty()) {
@@ -244,14 +202,6 @@ public class VkontakteService {
             }
         }
         return events;
-    }
-
-    public List<Country> getCountriesByCodes(String[] args) {
-        return convertFromVkCountries(apiVkMethod(MAX_ATTEMPTS, this::getCountriesResponse, args));
-    }
-
-    public List<Region> getRegionsByCountryId(String[] args) {
-        return convertFromVkRegion(apiVkMethod(MAX_ATTEMPTS, this::getRegionsResponse, args));
     }
 
     public List<City> getCitiesByCountryId(String[] args) {
