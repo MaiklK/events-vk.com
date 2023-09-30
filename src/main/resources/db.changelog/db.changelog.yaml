@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/v1_create_region_tables.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: init_db/v1_create_dictionary_table.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: init_db/v1_create_user_tables.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: init_db/v1_create_event_tables.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/default_roles.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: init_db/default_user.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: init_db/default_user_role.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 3
+      author: Maikl Kosmachev
+      changes:
+        - sqlFile:
+            path: init_db/fill_countries.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: init_db/fill_region.sql
+            relativeToChangelogFile: true

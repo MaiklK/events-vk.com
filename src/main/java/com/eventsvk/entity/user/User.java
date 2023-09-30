@@ -53,27 +53,27 @@ public class User implements UserDetails {
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private transient Set<Role> roles;
+    private Set<Role> roles;
 
     @Fetch(FetchMode.JOIN)
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "user_city",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "city_id"))
-    private transient City city;
+    private City city;
     @Fetch(FetchMode.JOIN)
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "user_country",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "country_id"))
-    private transient Country country;
+    private Country country;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private transient UserCounters counters;
+    private UserCounters counters;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private transient UserPersonal userPersonal;
+    private UserPersonal userPersonal;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

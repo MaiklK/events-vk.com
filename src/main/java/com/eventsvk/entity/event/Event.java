@@ -47,15 +47,7 @@ public class Event {
     @Column(name = "city_id")
     private int cityId;
 
-
-
-
-
 //    @Column
 //    private EventCounters counters;
-//    @Column
-//    private Country country;
-//    @Column
-//    private City city;
     //TODO дописать поля
 }

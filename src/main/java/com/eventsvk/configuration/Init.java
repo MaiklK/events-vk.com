@@ -85,7 +85,7 @@ public class Init {
     public void initDB() {
         UserActor userActor = new UserActor(0, ACCESS_TOKEN);
         vkontakteService.setUserActor(userActor);
-        initRolesAndUsers();
+//        initRolesAndUsers();
 //        fillCountryDB();
 //        List<Integer> list = countryService.getAllCountryId();
 //        for (int countryId : list) {
