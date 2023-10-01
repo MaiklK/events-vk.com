@@ -4,7 +4,7 @@ import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.repositories.UserRepository;
-import com.eventsvk.security.CastomUserDetails;
+import com.eventsvk.security.CustomUserDetails;
 import com.eventsvk.services.CityService;
 import com.eventsvk.services.CountryService;
 import com.eventsvk.services.User.UserService;
@@ -90,6 +90,6 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        return new CastomUserDetails(foundUser.get());
+        return new CustomUserDetails(foundUser.get());
     }
 }
