@@ -59,18 +59,19 @@ http://localhost:8085/swagger-ui.html
 Все контроллеры и их методы нужно сразу описывать аннотациями [Swagger](https://docs.swagger.io/swagger-core/v1.5.0/apidocs/allclasses-noframe.html).
 Swagger UI при запущенном приложении крутится [здесь](http://localhost:8085/swagger-ui.html).
 
-FlyWay - Первоначальное заполнение БД
-Docker - Окружение
-Actuator - End points живости приложения
-Swagger UI - Документация и мгновенное тестирование контроллеров
-Postgres - ДБ
-Prometheus - Метрики
-SDK Api Vk - библиотека для работы с API Вконтакте
-Grafana - Рисует из метрик красивые графики
-Spring Data JPA - для общения с базой
-Lombok - Сокращение boilerplate-кода
-Spring Security - Аутентификация по логину, паролю и через Вконтакте
-
+<ul>
+<li>FlyWay - Первоначальное заполнение БД</li>
+<li>Docker - Окружение</li>
+<li>Actuator - End points живости приложения</li>
+<li>Swagger UI - Документация и мгновенное тестирование контроллеров</li>
+<li>Postgres - ДБ</li>
+<li>Prometheus - Метрики</li>
+<li>SDK Api Vk - библиотека для работы с API Вконтакте</li>
+<li>Grafana - Рисует из метрик красивые графики</li>
+<li>Spring Data JPA - для общения с базой</li>
+<li>Lombok - Сокращение boilerplate-кода</li>
+<li>Spring Security - Аутентификация по логину, паролю и через Вконтакте</li>
+</ul>
 Таск-борд пока отсутствует.
 
 ### Backlog
