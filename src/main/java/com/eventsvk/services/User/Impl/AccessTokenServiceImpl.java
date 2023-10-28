@@ -23,8 +23,22 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
+    public AccessToken getTokenById(String id) {
+        Optional<AccessToken> foundToken = tokenRepository.findById(id);
+        try {
+            return foundToken.orElseThrow(() ->
+                    new AccessTokenNotFoundException("AccessToken с id: " + id + " не найден"));
+        } catch (AccessTokenNotFoundException e) {
+            return null;
+        }
+    }
+
+    @Override
     public void saveToken(AccessToken accessToken) {
-        tokenRepository.save(accessToken);
+        AccessToken foundToken = getTokenById(accessToken.getId());
+        if (foundToken == null || !accessToken.equals(foundToken) && !foundToken.isInUse()) {
+            tokenRepository.save(accessToken);
+        }
     }
 
     @Override
@@ -35,8 +49,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     public AccessToken getTokenNotInUse() {
         Optional<AccessToken> foundToken = tokenRepository.getRandomTokenNotInUse();
-        return foundToken.orElseThrow(() ->
-                new AccessTokenNotFoundException("Свободный и валидный AccessToken не найден"));
+        try {
+            return foundToken.orElseThrow(() ->
+                    new AccessTokenNotFoundException("Свободный и валидный AccessToken не найден"));
+        } catch (AccessTokenNotFoundException e) {
+            return null;
+        }
     }
 
     @Override

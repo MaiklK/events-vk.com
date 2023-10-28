@@ -18,4 +18,6 @@ public interface AccessTokenService {
     void setTokenInUse(AccessToken accessToken);
 
     void setTokenNotInUse(AccessToken accessToken);
+
+    AccessToken getTokenById(String id);
 }

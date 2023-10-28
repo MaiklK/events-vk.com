@@ -2,8 +2,10 @@ package com.eventsvk.services;
 
 import com.eventsvk.dto.UserVkDto;
 import com.eventsvk.entity.event.Event;
+import com.eventsvk.entity.user.AccessToken;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
+import com.eventsvk.services.User.AccessTokenService;
 import com.eventsvk.services.User.RoleService;
 import com.eventsvk.services.User.UserService;
 import com.eventsvk.util.ConverterDto;
@@ -59,6 +61,7 @@ public class VkontakteService {
     private final UserService userService;
     private final RoleService roleService;
     private final CountryService countryService;
+    private final AccessTokenService tokenService;
 
 
     public String getAuthorizationUrl() {
@@ -108,6 +111,15 @@ public class VkontakteService {
 
     public UserVkDto getUserVkDto(String userVK) {
         return converterDto.convertToUserVkDto(userVK);
+    }
+
+    public void saveAccessToken(String userVkid, String accessToken) {
+        tokenService.saveToken(AccessToken.builder()
+                .id(userVkid)
+                .isInUse(false)
+                .isValid(true)
+                .token(accessToken)
+                .build());
     }
 
     public User getUser(UserVkDto userVkDto) {
@@ -169,6 +181,7 @@ public class VkontakteService {
             UserVkDto userVkDto = getUserVkDto(vkUser);
             User foundUser = userService.findUserByVkid(userVkDto.getVkid());
             User user = foundUser != null ? foundUser : getUser(userVkDto);
+            saveAccessToken(user.getVkid(), user.getAccessToken());
             userService.saveUser(user);
             return new CustomAuthentication(user);
         } catch (ClientException | ApiException e) {
