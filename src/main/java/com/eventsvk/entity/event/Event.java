@@ -2,6 +2,7 @@ package com.eventsvk.entity.event;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -14,7 +15,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Table(name = "events")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Event {
+public class Event implements Comparable<Event> {
     @Id
     @GeneratedValue
     @Column(name = "id")
@@ -50,4 +51,24 @@ public class Event {
 //    @Column
 //    private EventCounters counters;
     //TODO дописать поля
+
+
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(this.id);
+    }
+
+    @Override
+    public boolean equals(Object event) {
+        if (this.getClass() != event.getClass()) {
+            return false;
+        }
+        Event otherEvent = (Event) event;
+        return this.id.equals(otherEvent.id);
+    }
+
+    @Override
+    public int compareTo(@NotNull Event event) {
+            return this.startDate - event.startDate;
+    }
 }

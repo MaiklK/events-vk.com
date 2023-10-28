@@ -15,6 +15,4 @@ public interface EventService {
     List<Event> getAllEvents();
 
     void updateEvent(Event event, String eventUuid);
-
-    List<Event> getEventsFromVK(int cityId, int countryId, String query);
 }

@@ -1,4 +1,4 @@
-version:  '3.7'
+version:  '4.22'
 services:
   postgres:
     image: postgres:15
@@ -19,7 +19,7 @@ services:
       - '3306:3306'
     environment:
       - MYSQL_DATABASE=root
-      - MYSQL_ROOT_PASSWORD=asdfrewq11234
+      - MYSQL_ROOT_PASSWORD=root
 
 #  events-vk.com:
 #    image: events-vk.com:latest
@@ -29,7 +29,7 @@ services:
 #      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/event_vk
 #      - SPRING_DATASOURCE_USERNAME=postgres
 #      - SPRING_DATASOURCE_PASSWORD=postgres
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
 
   prometheus:
     image: prom/prometheus

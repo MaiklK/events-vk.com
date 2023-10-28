@@ -1,8 +1,6 @@
 package com.eventsvk.configuration;
 
 import com.eventsvk.entity.event.Event;
-import com.eventsvk.repositories.CityRepository;
-import com.eventsvk.services.CountryService;
 import com.eventsvk.services.Event.EventService;
 import com.eventsvk.services.VkontakteService;
 import com.vk.api.sdk.client.actors.UserActor;
@@ -12,7 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -20,43 +21,37 @@ import java.util.List;
 public class Init {
 
     private final VkontakteService vkontakteService;
-    private final CityRepository cityRepository;
     private final EventService eventService;
-    private final CountryService countryService;
     @Value("${access_token}")
     private String ACCESS_TOKEN;
 
-    public void fillCityDB(int countryId) {
-        long beginTimestamp = System.currentTimeMillis();
-        String[] args = {String.valueOf(countryId)};
-
-        cityRepository.saveAll(vkontakteService.getCitiesByCountryId(args));
-
-        long endTimestamp = System.currentTimeMillis();
-        System.out.printf("Total time work 'fillCityDB' in millisecond: %d, for countryId: %d\n"
-                , endTimestamp - beginTimestamp, countryId);
-    }
-
-    public void getEventByQuery(String query, int cityId, int countryId) {
+    public Collection<Event> getEventByQuery(String query, int cityId, int countryId) {
 
         String[] args = {query, String.valueOf(cityId), String.valueOf(countryId)};
 
         List<Event> eventsList = vkontakteService.getEventsByQuery(args);
 
-        eventService.saveAllEvents(eventsList);
+//        eventService.saveAllEvents(eventsList);
+        return eventsList;
     }
 
-    /*Метод fillCityDB заполняет базу всеми городами из БД Вконтакте, примерно 1_200_000 строк,
-    ограничение вконтакте 20_000 в сутки,
-    работает только если заполнена БД стран
-    * */
+    public String[] getQueries() {
+        return new String[]{"а", "б", "в", "г", "д", "е", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т",
+                "у", "ф", "х", "ш", "щ", "ы", "э", "ю", "я", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
+                "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1 ", "2", "3", "4", "5",
+                "6", "7", "8", "9", "0", "", " ", "ё", "ч", "ы", "ъ"};
+    }
+
     @PostConstruct
-    public void initDB() {
+    public void initDB() throws InterruptedException {
         UserActor userActor = new UserActor(0, ACCESS_TOKEN);
         vkontakteService.setUserActor(userActor);
-//        getEventByQuery("ааа", 1, 1);
-//        for (int countryId : countryService.getAllCountryId()) {
-//            fillCityDB(countryId);
+//        Set<Event> events = new HashSet<>();
+//        for (String query : getQueries()){
+//            events.addAll(getEventByQuery(query, 1, 1));
+//            vkontakteService.pauseRequest();
 //        }
+//
+//        eventService.saveAllEvents(events.stream().toList());
     }
 }

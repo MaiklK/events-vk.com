@@ -3,6 +3,7 @@ package com.eventsvk.services.Event.Impl;
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.repositories.EventRepository;
 import com.eventsvk.services.Event.EventService;
+import com.eventsvk.util.exceptions.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,8 @@ public class EventServiceImpl implements EventService {
     public Event findEventByUuid(String eventUuid) {
         Optional<Event> foundEvent = eventRepository.findById(eventUuid);
 
-        return foundEvent.orElse(null);
+        return foundEvent.orElseThrow(() ->
+                new EventNotFoundException("Событие с eventUuid: " + eventUuid + "не найдено"));
     }
 
     @Override
@@ -50,9 +52,5 @@ public class EventServiceImpl implements EventService {
         updateEvent.setUuid(eventUuid);
         eventRepository.save(updateEvent);
     }
-
-    @Override
-    public List<Event> getEventsFromVK(int cityId, int countryId, String query) {
-        return eventRepository.findAll();
-    }
 }
+

@@ -1,7 +1,6 @@
 package com.eventsvk.services;
 
 import com.eventsvk.dto.UserVkDto;
-import com.eventsvk.entity.City;
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
@@ -14,7 +13,6 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.UserAuthResponse;
-import com.vk.api.sdk.objects.database.responses.GetCitiesResponse;
 import com.vk.api.sdk.objects.groups.Group;
 import com.vk.api.sdk.objects.groups.SearchType;
 import com.vk.api.sdk.objects.users.Fields;
@@ -24,10 +22,12 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -135,26 +135,6 @@ public class VkontakteService {
         return list;
     }
 
-    public List<com.vk.api.sdk.objects.database.City> getCitiesResponse(String[] args)
-            throws ClientException, ApiException, InterruptedException {
-        List<com.vk.api.sdk.objects.database.City> cities = new ArrayList<>();
-        GetCitiesResponse citiesResponse = vk.database().getCities(userActor, Integer.parseInt(args[0]))
-                .needAll(true)
-                .count(1)
-                .execute();
-        pauseRequest();
-        for (int i = 0; i < citiesResponse.getCount(); i += 1000) {
-            citiesResponse = vk.database().getCities(userActor, Integer.parseInt(args[0]))
-                    .count(1000)
-                    .offset(i)
-                    .needAll(true)
-                    .execute();
-            cities.addAll(citiesResponse.getItems());
-            pauseRequest();
-        }
-        return cities;
-    }
-
     public List<Group> getSearchResponseGroups(String[] args) throws ClientException, ApiException {
         return vk.groups().search(userActor, args[0])
                 .count(1000)
@@ -164,16 +144,6 @@ public class VkontakteService {
                 .type(SearchType.EVENT)
                 .execute()
                 .getItems();
-    }
-
-    public List<City> converterFromVkCity(List<?> citiesList) {
-        List<City> cities = new ArrayList<>();
-        if (!citiesList.isEmpty()) {
-            for (Object object : citiesList) {
-                cities.add(converterDto.fromVKCityToCity(object));
-            }
-        }
-        return cities;
     }
 
     public List<Event> converterFromVkGroup(List<?> eventList, String[] args) {
@@ -186,10 +156,6 @@ public class VkontakteService {
             }
         }
         return events;
-    }
-
-    public List<City> getCitiesByCountryId(String[] args) {
-        return converterFromVkCity(apiVkMethod(MAX_ATTEMPTS, this::getCitiesResponse, args));
     }
 
     public List<Event> getEventsByQuery(String[] args) {
@@ -205,9 +171,9 @@ public class VkontakteService {
             User user = foundUser != null ? foundUser : getUser(userVkDto);
             userService.saveUser(user);
             return new CustomAuthentication(user);
-        } catch (Throwable e) {
-            log.error("Ошибка при попытке аутентификации: {}", e.getMessage());
+        } catch (ClientException | ApiException e) {
+            throw new AuthenticationServiceException("Неудачная попытка аутентификации: "
+                    + Arrays.toString(e.getStackTrace()));
         }
-        return null;
     }
 }

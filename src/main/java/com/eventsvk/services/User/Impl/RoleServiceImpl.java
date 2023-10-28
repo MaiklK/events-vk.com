@@ -3,11 +3,13 @@ package com.eventsvk.services.User.Impl;
 import com.eventsvk.entity.user.Role;
 import com.eventsvk.repositories.RoleRepository;
 import com.eventsvk.services.User.RoleService;
+import com.eventsvk.util.exceptions.RoleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +31,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getRoleById(long id) {
-        return roleRepository.findById(id).orElse(null);
+        Optional<Role> foundRole = roleRepository.findById(id);
+        return foundRole.orElseThrow(() -> new RoleNotFoundException("Роль с id: " + id + " не найдена"));
     }
 }

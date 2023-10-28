@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByVkid(String vkid) {
-        return userRepository.findByVkid(vkid).orElse(null);
+        Optional<User> foundUser = userRepository.findByVkid(vkid);
+        return foundUser.orElseThrow(() ->
+                new UsernameNotFoundException("Пользователь с vkid: " + vkid + " не найден"));
     }
 
     @Override
@@ -63,7 +65,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(long userId) {
-        return userRepository.findById(userId).orElse(null);
+        Optional<User> foundUser = userRepository.findById(userId);
+        return foundUser.orElseThrow(() ->
+                new UsernameNotFoundException("Пользователь с id: " + userId + " не найден"));
     }
 
     @Transactional
@@ -78,7 +82,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User updateUser) {
         updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
-        System.out.println(updateUser);
         return userRepository.save(updateUser);
     }
 
@@ -86,10 +89,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String userVkid) throws UsernameNotFoundException {
         Optional<User> foundUser = userRepository.findByVkid(userVkid);
 
-        if (foundUser.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return new CustomUserDetails(foundUser.get());
+        return new CustomUserDetails(foundUser.orElseThrow(() ->
+                new UsernameNotFoundException("Пользователь с vkid: " + userVkid + " не найден")));
     }
 }
