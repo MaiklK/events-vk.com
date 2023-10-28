@@ -5,7 +5,7 @@ import com.eventsvk.entity.user.AccessToken;
 import java.util.List;
 
 public interface AccessTokenService {
-    List<AccessToken> getNotInUseTokens();
+    List<AccessToken> getAllTokens();
 
     void saveToken(AccessToken accessToken);
 

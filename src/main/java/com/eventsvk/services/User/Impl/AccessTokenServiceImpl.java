@@ -18,7 +18,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     private final AccessTokenRepository tokenRepository;
 
     @Override
-    public List<AccessToken> getNotInUseTokens() {
+    public List<AccessToken> getAllTokens() {
         return tokenRepository.findAll();
     }
 
@@ -34,7 +34,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     public AccessToken getTokenNotInUse() {
-        Optional<AccessToken> foundToken = tokenRepository.findByIsIAndInUseAndValid(true);
+        Optional<AccessToken> foundToken = tokenRepository.getRandomTokenNotInUse();
         return foundToken.orElseThrow(() ->
                 new AccessTokenNotFoundException("Свободный и валидный AccessToken не найден"));
     }
