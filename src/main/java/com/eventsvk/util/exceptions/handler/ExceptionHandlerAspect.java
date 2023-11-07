@@ -1,5 +1,8 @@
-package com.eventsvk.util.logging;
+package com.eventsvk.util.exceptions.handler;
 
+import com.eventsvk.util.TimeUtils;
+import com.vk.api.sdk.exceptions.ApiTooManyException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -11,9 +14,14 @@ import java.util.Arrays;
 @Aspect
 @Component
 @Slf4j
-public class ExceptionLoggingAspect {
+@AllArgsConstructor
+public class ExceptionHandlerAspect {
+
     @AfterThrowing(pointcut = "execution(* com.eventsvk..*(..))", throwing = "exception")
     public void exceptionLogging(JoinPoint joinPoint, Exception exception) {
+        if (exception instanceof ApiTooManyException) {
+            TimeUtils.pauseRequest();
+        }
         log.error("Метод {} в классе {}, выдал ошибку {}",
                 joinPoint.getSignature().getName(),
                 joinPoint.getTarget().getClass().getSimpleName(),

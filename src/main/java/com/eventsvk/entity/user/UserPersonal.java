@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -40,4 +41,18 @@ public class UserPersonal {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserPersonal that)) return false;
+        return political == that.political && peopleMain == that.peopleMain && lifeMain == that.lifeMain
+                && smoking == that.smoking && alcohol == that.alcohol && Objects.equals(inspiredBy, that.inspiredBy)
+                && Objects.equals(langs, that.langs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(political, inspiredBy, peopleMain, lifeMain, smoking, alcohol, langs);
+    }
 }

@@ -89,7 +89,7 @@ CREATE TABLE if NOT EXISTS PUBLIC.user_country
 
 CREATE TABLE if NOT EXISTS PUBLIC.access_tokens
 (
-    id        BIGINT NOT NULL PRIMARY KEY,
+    id        VARCHAR(255) NOT NULL PRIMARY KEY,
     is_in_use BOOLEAN,
     is_valid  BOOLEAN,
     token     varchar(255)

@@ -3,41 +3,46 @@
     {
       "name": "client-id",
       "type": "java.lang.String",
-      "description": "Description for client-id."
+      "description": "Vkontakte application id."
     },
     {
       "name": "client-secret",
       "type": "java.lang.String",
-      "description": "Description for client-secret."
+      "description": "Vkontakte application client secret."
     },
     {
       "name": "redirect-uri",
       "type": "java.lang.String",
-      "description": "Description for redirect-uri."
+      "description": "Redirect uri after authorization."
     },
     {
       "name": "authorization-uri",
       "type": "java.lang.String",
-      "description": "Description for authorization-uri."
+      "description": "Authorization uri vor Vkontakte."
     },
     {
       "name": "scope",
       "type": "java.lang.String",
-      "description": "Description for scope."
+      "description": "Permissions for Api Vk access_token."
     },
     {
-      "name": "acces_token",
+      "name": "access_token",
       "type": "java.lang.String",
-      "description": "Description for acces_token."
+      "description": "Description for access_token."
     },
     {
       "name": "pause_between_request",
       "type": "java.lang.String",
-      "description": "Description for pause_between_request."
+      "description": "Pause allows you not to exceed the limit 3 request per minute."
     },
     {
       "name": "max_attempts",
       "type": "java.lang.String",
-      "description": "Description for max_attempts."
+      "description": "Maximum attempts, to request Api VK."
+    },
+    {
+      "name": "max_execute_requests",
+      "type": "java.lang.String",
+      "description": "Maximum execute requests."
     }
   ] }

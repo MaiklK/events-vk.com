@@ -3,16 +3,17 @@ package com.eventsvk.util;
 import com.eventsvk.dto.UserVkDto;
 import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
-import com.eventsvk.entity.Region;
 import com.eventsvk.entity.event.Event;
 import com.eventsvk.entity.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ConverterDto {
     private final ObjectMapper objectMapper;
     private final ModelMapper modelMapper;
@@ -21,7 +22,8 @@ public class ConverterDto {
         try {
             return objectMapper.readValue(json, UserVkDto.class);
         } catch (Exception e) {
-            e.printStackTrace();//TODO прикрутить логи
+            log.error("Не удалось конвертировать Json в объект UserVKDto {}",
+                    e.getMessage());
         }
         return null;
     }
@@ -42,12 +44,7 @@ public class ConverterDto {
         return modelMapper.map(country, Country.class);
     }
 
-    public Region fromVkRegionToRegion(Object region) {
-        return modelMapper.map(region, Region.class);
-    }
-
     public Event fromVkGroupToEvent(Object group) {
         return modelMapper.map(group, Event.class);
     }
-    //TODO дописать сущности, их DTO и конверторы к ним
 }

@@ -3,6 +3,8 @@ package com.eventsvk.services.User.Impl;
 import com.eventsvk.entity.City;
 import com.eventsvk.entity.Country;
 import com.eventsvk.entity.user.User;
+import com.eventsvk.entity.user.UserCounters;
+import com.eventsvk.entity.user.UserPersonal;
 import com.eventsvk.repositories.UserRepository;
 import com.eventsvk.security.CustomUserDetails;
 import com.eventsvk.services.CityService;
@@ -31,8 +33,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         if (user.getCity() != null) {
             City city = cityRepository.findCityById(user.getCity().getId());
             if (city != null) {
@@ -44,6 +44,16 @@ public class UserServiceImpl implements UserService {
             if (country != null) {
                 user.setCountry(country);
             }
+        }
+        if (findUserByVkid(user.getVkid()) != null) {
+            UserPersonal userPersonal = user.getUserPersonal();
+            UserCounters userCounters = user.getCounters();
+            userPersonal.setId(user.getId());
+            userCounters.setId(user.getId());
+            user.setUserPersonal(userPersonal);
+            user.setCounters(userCounters);
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         user.getUserPersonal().setUser(user);

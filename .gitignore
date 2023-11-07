@@ -7,7 +7,7 @@ target/
 machinet.conf
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+query.txt
 
 ### STS ###
 .apt_generated

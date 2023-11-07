@@ -1,6 +1,7 @@
 package com.eventsvk.exception;
 
 import com.eventsvk.services.VkontakteService;
+import com.eventsvk.util.TimeUtils;
 import com.vk.api.sdk.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class VkServiceLogging {
         try {
             return joinPoint.proceed();
         } catch (ApiTooManyException exception) {
-            vkontakteService.pauseRequest();
+            TimeUtils.pauseRequest();
             logError(joinPoint, exception);
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();

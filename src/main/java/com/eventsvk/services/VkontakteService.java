@@ -1,22 +1,19 @@
 package com.eventsvk.services;
 
 import com.eventsvk.dto.UserVkDto;
-import com.eventsvk.entity.event.Event;
 import com.eventsvk.entity.user.AccessToken;
 import com.eventsvk.entity.user.User;
 import com.eventsvk.security.CustomAuthentication;
+import com.eventsvk.services.Event.QueryService;
 import com.eventsvk.services.User.AccessTokenService;
 import com.eventsvk.services.User.RoleService;
 import com.eventsvk.services.User.UserService;
 import com.eventsvk.util.ConverterDto;
-import com.eventsvk.util.function.MethodCaller;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.UserAuthResponse;
-import com.vk.api.sdk.objects.groups.Group;
-import com.vk.api.sdk.objects.groups.SearchType;
 import com.vk.api.sdk.objects.users.Fields;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +25,9 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -55,13 +52,13 @@ public class VkontakteService {
     private int PAUSE_BETWEEN_REQUEST;
     @Value("${max_attempts}")
     private int MAX_ATTEMPTS;
-    private String codeFlow;
     private UserActor userActor;
     private final ConverterDto converterDto;
     private final UserService userService;
     private final RoleService roleService;
     private final CountryService countryService;
     private final AccessTokenService tokenService;
+    private final QueryService queryService;
 
 
     public String getAuthorizationUrl() {
@@ -75,16 +72,14 @@ public class VkontakteService {
     }
 
     public void getUserAuthResponse(String codeFlow) throws ApiException, ClientException {
-        this.codeFlow = codeFlow;
-        UserAuthResponse authResponse;
-        authResponse = vk.oAuth()
+        UserAuthResponse authResponse = vk.oAuth()
                 .userAuthorizationCodeFlow(APP_ID, CLIENT_SECRET, REDIRECT_URI, codeFlow)
                 .execute();
         getUserActor(authResponse);
     }
 
     public void getUserActor(UserAuthResponse userAuthVK) {
-        this.userActor = new UserActor(userAuthVK.getUserId(), userAuthVK.getAccessToken());
+        userActor = new UserActor(userAuthVK.getUserId(), userAuthVK.getAccessToken());
     }
 
     public List<Fields> getFieldsList() {
@@ -125,62 +120,28 @@ public class VkontakteService {
     public User getUser(UserVkDto userVkDto) {
         User user = converterDto.fromVkUserToUser(userVkDto);
         user.setPassword("pOdk*efjv^21Pdlw90!fB");
-        user.setRoles(Set.of(roleService.getRoleById(1)));
+        user.setRoles(Set.of(roleService.getRoleById(2)));
         user.setAccessToken(userActor.getAccessToken());
         user.setAccountNonLocked(true);
         return user;
     }
 
-    public void pauseRequest() throws InterruptedException {
-        Thread.sleep(PAUSE_BETWEEN_REQUEST);
-    }
-
-    public List<?> apiVkMethod(int maxAttempts, MethodCaller methodCaller, String[] args) {
-        List<?> list = new ArrayList<>();
-        for (int attempt = 0; attempt < maxAttempts; attempt++) {
-            try {
-                list = methodCaller.callMethod(args);
-                return list;
-            } catch (ApiException | ClientException | InterruptedException ignored) {
-            }
-        }
-        return list;
-    }
-
-    public List<Group> getSearchResponseGroups(String[] args) throws ClientException, ApiException {
-        return vk.groups().search(userActor, args[0])
-                .count(1000)
-                .cityId(Integer.valueOf(args[1]))
-                .countryId(Integer.valueOf(args[2]))
-                .future(true)
-                .type(SearchType.EVENT)
-                .execute()
-                .getItems();
-    }
-
-    public List<Event> converterFromVkGroup(List<?> eventList, String[] args) {
-        List<Event> events = new ArrayList<>();
-        if (!eventList.isEmpty()) {
-            for (Object object : eventList) {
-                Event event = converterDto.fromVkGroupToEvent(object);
-                event.setCityId(Integer.parseInt(args[1]));
-                events.add(event);
-            }
-        }
-        return events;
-    }
-
-    public List<Event> getEventsByQuery(String[] args) {
-        return converterFromVkGroup(apiVkMethod(MAX_ATTEMPTS, this::getSearchResponseGroups, args), args);
+    public User verifyUser(UserVkDto userVkDto) {
+        User user = getUser(userVkDto);
+        Optional<User> foundUser = Optional.ofNullable(userService.findUserByVkid(userVkDto.getVkid()));
+        foundUser.ifPresent(fu -> {
+            user.setAccountNonLocked(fu.isAccountNonLocked());
+            user.setId(fu.getId());
+            user.setRoles(fu.getRoles());
+        });
+        return user;
     }
 
     public CustomAuthentication getCustomAuthentication(String codeFlow) {
         try {
             getUserAuthResponse(codeFlow);
-            String vkUser = getVkUser();
-            UserVkDto userVkDto = getUserVkDto(vkUser);
-            User foundUser = userService.findUserByVkid(userVkDto.getVkid());
-            User user = foundUser != null ? foundUser : getUser(userVkDto);
+            UserVkDto userVkDto = getUserVkDto(getVkUser());
+            User user = verifyUser(userVkDto);
             saveAccessToken(user.getVkid(), user.getAccessToken());
             userService.saveUser(user);
             return new CustomAuthentication(user);

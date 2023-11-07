@@ -11,6 +11,7 @@ services:
      POSTGRES_PASSWORD: postgres
      POSTGRES_USER: postgres
      PGDATA: /var/lib/postgresql/data
+     restart: always
 
   mySQL:
     image: mysql:8.0
@@ -20,6 +21,7 @@ services:
     environment:
       - MYSQL_DATABASE=root
       - MYSQL_ROOT_PASSWORD=root
+    restart: always
 
 #  events-vk.com:
 #    image: events-vk.com:latest

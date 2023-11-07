@@ -33,19 +33,22 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         }
     }
 
+    @Transactional
     @Override
     public void saveToken(AccessToken accessToken) {
         AccessToken foundToken = getTokenById(accessToken.getId());
-        if (foundToken == null || !accessToken.equals(foundToken) && !foundToken.isInUse()) {
+        if (!accessToken.equals(foundToken) && !foundToken.isInUse() || foundToken == null) {
             tokenRepository.save(accessToken);
         }
     }
 
+    @Transactional
     @Override
     public void updateToken(AccessToken accessToken) {
         tokenRepository.save(accessToken);
     }
 
+    @Transactional
     @Override
     public AccessToken getTokenNotInUse() {
         Optional<AccessToken> foundToken = tokenRepository.getRandomTokenNotInUse();
@@ -57,21 +60,24 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         }
     }
 
+    @Transactional
     @Override
     public void setTokenNotValid(AccessToken accessToken) {
         accessToken.setValid(false);
-        tokenRepository.save(accessToken);
+        updateToken(accessToken);
     }
 
+    @Transactional
     @Override
     public void setTokenInUse(AccessToken accessToken) {
         accessToken.setInUse(true);
-        tokenRepository.save(accessToken);
+        updateToken(accessToken);
     }
 
+    @Transactional
     @Override
     public void setTokenNotInUse(AccessToken accessToken) {
         accessToken.setInUse(false);
-        tokenRepository.save(accessToken);
+        updateToken(accessToken);
     }
 }

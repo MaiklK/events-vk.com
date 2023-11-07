@@ -15,7 +15,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-
     private final EventRepository eventRepository;
 
     @Override

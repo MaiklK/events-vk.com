@@ -1,27 +1,18 @@
 package com.eventsvk.util;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
+@PropertySource("classpath:application.properties")
+@RequiredArgsConstructor
 public class TimeUtils {
-    public static String getTime() {
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.now().format(formatter);
-    }
+    @Value("${pause_between_request}")
+    private static int PAUSE_BETWEEN_REQUEST;
 
-    public String convertToDateAndTime(Long timestamp) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return dateTime.format(formatter);
+    @SneakyThrows
+    public static void pauseRequest() {
+        Thread.sleep(PAUSE_BETWEEN_REQUEST);
     }
-
-    public static String formatDate(Date date, String formatType) {
-        SimpleDateFormat formatter = new SimpleDateFormat(formatType);
-        return formatter.format(date);
-    }
-    //TODO получение unixtime, конвертация в обычное время и обратно
 }

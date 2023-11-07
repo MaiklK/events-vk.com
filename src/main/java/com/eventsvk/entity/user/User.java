@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -123,5 +124,22 @@ public class User implements UserDetails {
         this.roles.forEach(role -> str.append(role.getName()));
 
         return str.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return sex == user.sex && isClosed == user.isClosed && Objects.equals(vkid, user.vkid)
+                && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName)
+                && Objects.equals(mobilePhone, user.mobilePhone) && Objects.equals(accessToken, user.accessToken)
+                && Objects.equals(birthdayDate, user.birthdayDate) && Objects.equals(photoBig, user.photoBig)
+                && Objects.equals(photoId, user.photoId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vkid, firstName, lastName, mobilePhone, accessToken, birthdayDate,
+                sex, isClosed, photoBig, photoId);
     }
 }

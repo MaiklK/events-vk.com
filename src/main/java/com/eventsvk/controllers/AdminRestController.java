@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/v1/api")
 @RequiredArgsConstructor
 public class AdminRestController {
-
     private final RoleService roleService;
     private final UserService userService;
 
