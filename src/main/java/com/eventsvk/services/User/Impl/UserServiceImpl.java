@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
         if (findUserByVkid(user.getVkid()) != null) {
             UserPersonal userPersonal = user.getUserPersonal();
             UserCounters userCounters = user.getCounters();
-            userPersonal.setId(user.getId());
-            userCounters.setId(user.getId());
+            userPersonal.setUser_id(user.getVkid());
+            userCounters.setUser_id(user.getVkid());
             user.setUserPersonal(userPersonal);
             user.setCounters(userCounters);
         } else {

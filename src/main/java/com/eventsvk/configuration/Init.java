@@ -5,7 +5,6 @@ import com.eventsvk.services.Event.QueryService;
 import com.eventsvk.services.SearchService;
 import com.eventsvk.services.User.AccessTokenService;
 import com.eventsvk.services.VkontakteService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class Init {
     private final SearchService searchService;
 
     @SneakyThrows
-    @PostConstruct
+//    @PostConstruct
     public void initDB() {
 
         Set<Integer> eventsId = new HashSet<>();

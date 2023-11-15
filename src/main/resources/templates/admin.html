@@ -90,15 +90,15 @@
                                             <a type="button" class="btn btn-sm btn-primary"
                                                data-bs-toggle="modal"
                                                data-bs-target="#editModal"
-                                               th:data-bs-target="${'#editModal'+user.getId()}">Update</a>
+                                               th:data-bs-target="${'#editModal'+user.getVkid()}">Update</a>
                                         </td>
                                         <td>
                                             <a type="button" class="btn btn-sm btn-danger"
                                                data-bs-toggle="modal"
                                                data-bs-target="#ban"
-                                               th:data-bs-target="${'#ban'+user.getId()}">Ban</a>
+                                               th:data-bs-target="${'#ban'+user.getVkid()}">Ban</a>
                                         </td>
-                                        <div class="modal fade" th:id="${'editModal'+ user.getId()}"
+                                        <div class="modal fade" th:id="${'editModal'+ user.getVkid()}"
                                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" modal-dialog-centered>
                                                 <div class="modal-content">
@@ -116,12 +116,7 @@
                                                             <label for="id"><b>ID в базе</b></label>
                                                             <input th:name="id" th:type="text"
                                                                    class="form-control"
-                                                                   id="id" th:value="*{id}" disabled/>
-                                                            <br>
-                                                            <label for="vkid"><b>ID вконтакте</b></label>
-                                                            <input th:name="vkid" th:type="text"
-                                                                   class="form-control" id="vkid"
-                                                                   th:value="*{vkid}" disabled/>
+                                                                   id="id" th:value="*{vkid}" disabled/>
                                                             <br>
                                                             <label for="firstName"><b>Имя</b></label>
                                                             <input th:name="firstName" th:type="text"
@@ -161,7 +156,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal fade" th:id="${'ban'+user.getId()}"
+                                        <div class="modal fade" th:id="${'ban'+user.getVkid()}"
                                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
@@ -173,15 +168,9 @@
                                                                 aria-label="Close"></button>
                                                     </div>
                                                     <form class="modal-body col-md text-center"
-                                                          th:action="@{/user/{id}(id=${user.getId()})}"
+                                                          th:action="@{/user/{id}(id=${user.getVkid()})}"
                                                           th:method="PUT">
                                                         <div class="modal-body col-md">
-                                                            <label for="id1"><b>ID в базе</b></label>
-                                                            <input th:name="id" th:type="text"
-                                                                   class="form-control"
-                                                                   id="id1" th:value="${user.getId()}"
-                                                                   disabled/>
-                                                            <br>
                                                             <label for="vkid1"><b>ID вконтакте</b></label>
                                                             <input th:name="vkid" th:type="text"
                                                                    class="form-control"

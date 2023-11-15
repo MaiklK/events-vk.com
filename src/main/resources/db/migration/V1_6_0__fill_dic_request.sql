@@ -1867,3 +1867,8 @@ INSERT INTO public.dic_requests (id, req) VALUES (1866, 'яь');
 INSERT INTO public.dic_requests (id, req) VALUES (1867, 'яэ');
 INSERT INTO public.dic_requests (id, req) VALUES (1868, 'яю');
 INSERT INTO public.dic_requests (id, req) VALUES (1869, 'яя');
+
+INSERT INTO public.access_tokens (id, is_in_use, is_valid, token) VALUES ('814807613', false, true, 'vk1.a.6cOIrJIPWsZE25KUSWM8dTkw2Pop2xAWsdriYAN097n4bvci-wajfzNbKTeWaxqbmIxMGPlOsbInCs70ZvPA0mKf9I5CbWl9ukL0dXZWKSSYmrChRuvTlrKYfS0p6y5Pv_2UEX30MmP8loKMRzUQnJE3Tb5eBddyq0nR-g1UgQpzA_jSkvN9hQfd3mV28lF9Ed2V-8p39hc5LJqHnixzPQ');
+INSERT INTO public.access_tokens (id, is_in_use, is_valid, token) VALUES ('483775940', false, true, 'vk1.a.tllLJLiuRnEIafiIVzau_ZGzKIA08qCp5K3kTujP8Y_smjTVLFpulPrGr3-mGrYrStgCGlMKsyN9zqDYHOGVnS8fLBCrSLShz2Amkh7dm4Zde3uU6fAz4jtO0DDKoDnhxvQrbQvBrT-qr7as5RQNYkL1bwVk9N_Hbd5SlDgJSSTMuVmOvcjHg7t2byTNkXQXy2FEWMbP65vrnQGWemLVdQ');
+INSERT INTO public.access_tokens (id, is_in_use, is_valid, token) VALUES ('420214979', false, true, 'vk1.a.uwPUUrLYFipFmBK9haUIyrowXmKfYl0Fuqr5ICR00nh9m21XCj-0vrW97ujjcRCqbbFXN_84QJeAqgcCub48PRQnsBr2dO4Mus4TTL6tYtSLyrvUR7sBDCYctNuClqJTwCGcvlhY_4BwSzR33C3ub-fxonStlpddGQeuGN8isT8SkA7B0WH5SBMjWtszvFicLH9xSUBTkVU1kZ0Xu7ufew');
+INSERT INTO public.access_tokens (id, is_in_use, is_valid, token) VALUES ('123123', false, true, 'vk1.a.IT5BauiwM0WF03vMpMj7fhElp_YWmulzhN-ASNIREd-Kc_XIetEfGS-IUhNESf_1M3sSY9yisxZJRpmItwrpdvYCyIrZssyMfh9iJ9NdDvHCWRjVPqBCa6TAtEcvMWMbWZ21HozJZe5LyUGkALIjE-OAQIieLFpGUztd8QsB9SHQ1u8HhbTjIyN4Gc9R_0uBivdV_1k-KxTS_rUJGnU5Ig');

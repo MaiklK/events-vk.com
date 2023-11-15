@@ -8,6 +8,7 @@ import com.vk.api.sdk.client.TransportClient;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ApiTooManyException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -43,21 +43,12 @@ public class SearchService {
     public Set<Integer> executeSearch(String cityId) {
 
         List<String> executeList = getExecuteRequests(cityId);
-        Set<Integer> eventsId = new CopyOnWriteArraySet<>();
+        Set<Integer> eventsId = new ConcurrentSkipListSet<>();
 
         try (ExecutorService executorService = Executors.newFixedThreadPool(4)) {
-
-
             for (String s : executeList) {
                 executorService.submit(new TaskExecuteRequest(tokenService, s, eventsId));
             }
-            executorService.shutdown();
-
-            executorService.awaitTermination(5, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            // Handle the InterruptedException appropriately
-            Thread.currentThread().interrupt();
-            log.error("Ошибочка {}", e.getMessage());
         }
         return eventsId;
     }
@@ -107,20 +98,21 @@ public class SearchService {
         public void run() {
             AccessToken token = tokenService.getTokenNotInUse();
             tokenService.setTokenInUse(token);
-            if (token != null) {
-                for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-                    try {
-                        UserActor userActor = new UserActor(Integer.valueOf(token.getId()), token.getToken());
-                        eventsId.addAll(getEventsId(userActor, request));
-                    } catch (ApiException | ClientException e) {
-                        TimeUtils.pauseRequest();
-                        log.error("Ошибка запроса вконтакте: {}", e.getMessage());
-                    } finally {
-                        tokenService.setTokenNotInUse(token);
-                    }
+            log.debug("Токен с id: {} взят в работу", token.getId());
+            for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+                try {
+                    UserActor userActor = new UserActor(Integer.valueOf(token.getId()), token.getToken());
+                    eventsId.addAll(getEventsId(userActor, request));
+
+                } catch (ApiTooManyException e) {
+                    TimeUtils.pauseRequest();
+                    log.error("Слишком много запросов в секунду {}", e.getMessage());
+                } catch (ApiException | ClientException e) {
+                    log.error("Ошибка запроса вконтакте: {}", e.getMessage());
+                } finally {
+                    tokenService.setTokenNotInUse(token);
+                    log.debug("Токен с id: {} возвращен в прежнее состояние", token.getId());
                 }
-            } else {
-                log.warn("Не удалось получить Access_Token");
             }
         }
 

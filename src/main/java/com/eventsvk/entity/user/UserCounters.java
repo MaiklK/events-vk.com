@@ -16,8 +16,7 @@ import java.util.Objects;
 @Table(name = "user_counters")
 public class UserCounters {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private String user_id;
     @Column
     private int albums;
     @Column

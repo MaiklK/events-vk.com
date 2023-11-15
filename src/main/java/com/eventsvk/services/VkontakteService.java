@@ -131,7 +131,7 @@ public class VkontakteService {
         Optional<User> foundUser = Optional.ofNullable(userService.findUserByVkid(userVkDto.getVkid()));
         foundUser.ifPresent(fu -> {
             user.setAccountNonLocked(fu.isAccountNonLocked());
-            user.setId(fu.getId());
+            user.setVkid(fu.getVkid());
             user.setRoles(fu.getRoles());
         });
         return user;

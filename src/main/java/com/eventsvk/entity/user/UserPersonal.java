@@ -18,8 +18,7 @@ import java.util.Objects;
 @Table(name = "user_personal")
 public class UserPersonal {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private String user_id;
     @Column
     private int political;
     @Column(name = "inspire_by")

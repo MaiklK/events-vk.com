@@ -22,9 +22,6 @@ import java.util.Set;
 @Entity
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
-    @Column
     private String vkid;
     @Column(name = "first_name")
     private String firstName;
