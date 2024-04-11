@@ -31,6 +31,7 @@ public class DebugAllMethods {
         log.debug("Метод {} в классе {}, отработал и вернул: {}",
                 joinPoint.getSignature().getName(),
                 joinPoint.getTarget().getClass().getSimpleName(),
-                returnValue);
+                returnValue.toString().substring(0,
+                        Math.min(returnValue.toString().length(), 1000)));
     }
 }

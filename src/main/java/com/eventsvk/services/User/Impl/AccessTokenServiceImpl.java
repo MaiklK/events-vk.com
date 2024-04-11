@@ -5,6 +5,7 @@ import com.eventsvk.repositories.AccessTokenRepository;
 import com.eventsvk.services.User.AccessTokenService;
 import com.eventsvk.util.exceptions.AccessTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,32 +13,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
+@RequiredArgsConstructor()
+@Slf4j
 public class AccessTokenServiceImpl implements AccessTokenService {
     private final AccessTokenRepository tokenRepository;
+    private final AccessTokenService self;
 
+    @Transactional(readOnly = true)
     @Override
     public List<AccessToken> getAllTokens() {
         return tokenRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public AccessToken getTokenById(String id) {
+    public AccessToken getTokenById(String id) throws AccessTokenNotFoundException {
         Optional<AccessToken> foundToken = tokenRepository.findById(id);
-        try {
-            return foundToken.orElseThrow(() ->
-                    new AccessTokenNotFoundException("AccessToken с id: " + id + " не найден"));
-        } catch (AccessTokenNotFoundException e) {
-            return null;
-        }
+        return foundToken.orElseThrow(() -> {
+            log.error("AccessToken с id: {} не найден", id);
+            return new AccessTokenNotFoundException("AccessToken с id: " + id + " не найден");
+        });
     }
 
     @Transactional
     @Override
-    public void saveToken(AccessToken accessToken) {
-        AccessToken foundToken = getTokenById(accessToken.getId());
-        if (!accessToken.equals(foundToken) && !foundToken.isInUse() || foundToken == null) {
+    public void saveToken(AccessToken accessToken) throws AccessTokenNotFoundException {
+        AccessToken foundToken = self.getTokenById(accessToken.getId());
+        if (!accessToken.equals(foundToken) && !foundToken.isInUse()) {
             tokenRepository.save(accessToken);
         }
     }
@@ -50,34 +52,25 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Transactional
     @Override
-    public AccessToken getTokenNotInUse() {
+    public AccessToken getTokenNotInUse() throws AccessTokenNotFoundException {
         Optional<AccessToken> foundToken = tokenRepository.getRandomTokenNotInUse();
-        try {
-            return foundToken.orElseThrow(() ->
-                    new AccessTokenNotFoundException("Свободный и валидный AccessToken не найден"));
-        } catch (AccessTokenNotFoundException e) {
-            return null;
-        }
+
+        return foundToken.orElseThrow(() -> {
+            log.error("Свободный и валидный AccessToken не найден");
+            return new AccessTokenNotFoundException("Свободный и валидный AccessToken не найден");
+        });
+
     }
 
-    @Transactional
     @Override
     public void setTokenNotValid(AccessToken accessToken) {
         accessToken.setValid(false);
-        updateToken(accessToken);
+        self.updateToken(accessToken);
     }
 
-    @Transactional
     @Override
-    public void setTokenInUse(AccessToken accessToken) {
-        accessToken.setInUse(true);
-        updateToken(accessToken);
-    }
-
-    @Transactional
-    @Override
-    public void setTokenNotInUse(AccessToken accessToken) {
-        accessToken.setInUse(false);
-        updateToken(accessToken);
+    public void setTokenStatus(AccessToken accessToken, boolean status) {
+        accessToken.setInUse(status);
+        self.updateToken(accessToken);
     }
 }

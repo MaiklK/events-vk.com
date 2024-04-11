@@ -16,7 +16,7 @@ import java.util.Arrays;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class VkServiceLogging {
+public class VkServiceHandler {
     private final VkontakteService vkontakteService;
 
     @Pointcut("within(com.eventsvk.services.VkontakteService)")

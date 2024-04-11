@@ -18,6 +18,7 @@ import com.vk.api.sdk.objects.users.Fields;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -108,6 +109,7 @@ public class VkontakteService {
         return converterDto.convertToUserVkDto(userVK);
     }
 
+    @SneakyThrows
     public void saveAccessToken(String userVkid, String accessToken) {
         tokenService.saveToken(AccessToken.builder()
                 .id(userVkid)

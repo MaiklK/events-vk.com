@@ -2,7 +2,7 @@ version:  '4.22'
 services:
   postgres:
     image: postgres:15
-    container_name: postgres_db
+    container_name: postgres_vk_db
     restart: unless-stopped
     ports:
       - '5432:5432'
@@ -15,7 +15,7 @@ services:
 
   mySQL:
     image: mysql:8.0
-    container_name: mySQL_DB
+    container_name: mySQL_vk_db
     ports:
       - '3306:3306'
     environment:
@@ -35,6 +35,8 @@ services:
 
   prometheus:
     image: prom/prometheus
+    container_name: prometheus_vk
+    restart: unless-stopped
     ports:
       - '9090:9090'
     volumes:
@@ -42,6 +44,8 @@ services:
 
   grafana:
     image: grafana/grafana
+    container_name: grafana_vk
+    restart: unless-stopped
     ports:
       - '3000:3000'
     environment:
