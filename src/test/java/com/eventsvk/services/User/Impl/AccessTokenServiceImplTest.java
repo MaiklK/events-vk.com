@@ -23,7 +23,6 @@ class AccessTokenServiceImplTest {
 
     @Mock
     private AccessTokenRepository tokenRepository;
-
     @InjectMocks
     private AccessTokenServiceImpl sut;
 
