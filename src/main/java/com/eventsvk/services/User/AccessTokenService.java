@@ -1,23 +1,22 @@
 package com.eventsvk.services.User;
 
 import com.eventsvk.entity.user.AccessToken;
+import com.eventsvk.util.exceptions.AccessTokenNotFoundException;
 
 import java.util.List;
 
 public interface AccessTokenService {
     List<AccessToken> getAllTokens();
 
-    void saveToken(AccessToken accessToken);
+    void saveToken(AccessToken accessToken) throws AccessTokenNotFoundException;
 
     void updateToken(AccessToken accessToken);
 
-    AccessToken getTokenNotInUse();
+    AccessToken getTokenNotInUse() throws AccessTokenNotFoundException;
 
     void setTokenNotValid(AccessToken accessToken);
 
-    void setTokenInUse(AccessToken accessToken);
+    void setTokenStatus(AccessToken accessToken, boolean status);
 
-    void setTokenNotInUse(AccessToken accessToken);
-
-    AccessToken getTokenById(String id);
+    AccessToken getTokenById(String id) throws AccessTokenNotFoundException;
 }

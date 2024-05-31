@@ -11,9 +11,9 @@ import java.util.Collection;
 @Getter
 public class CustomAuthentication implements Authentication {
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
     private boolean isAuthenticated;
-    private UserDetails principal;
+    private final UserDetails principal;
 
     public CustomAuthentication(User user) {
         this.authorities = user.getAuthorities();

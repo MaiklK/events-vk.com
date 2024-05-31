@@ -1,13 +1,17 @@
 package com.eventsvk.exception;
 
-import com.eventsvk.services.VkontakteService;
 import com.eventsvk.util.TimeUtils;
-import com.vk.api.sdk.exceptions.*;
+import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ApiTooManyException;
+import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.exceptions.OAuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -16,8 +20,7 @@ import java.util.Arrays;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class VkServiceLogging {
-    private final VkontakteService vkontakteService;
+public class VkServiceHandler {
 
     @Pointcut("within(com.eventsvk.services.VkontakteService)")
     public void isVkService() {

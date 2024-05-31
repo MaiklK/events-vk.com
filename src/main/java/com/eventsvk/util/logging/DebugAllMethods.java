@@ -2,7 +2,6 @@ package com.eventsvk.util.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -26,11 +25,12 @@ public class DebugAllMethods {
                 Arrays.toString(joinPoint.getArgs()));
     }
 
-    @AfterReturning(value = "allMethods()", returning = "returnValue")
-    public void logAfterReturning(JoinPoint joinPoint, Object returnValue) {
-        log.debug("Метод {} в классе {}, отработал и вернул: {}",
-                joinPoint.getSignature().getName(),
-                joinPoint.getTarget().getClass().getSimpleName(),
-                returnValue);
-    }
+//    @AfterReturning(value = "allMethods()", returning = "returnValue")
+//    public void logAfterReturning(JoinPoint joinPoint, Object returnValue) {
+//        log.debug("Метод {} в классе {}, отработал и вернул: {}",
+//                joinPoint.getSignature().getName(),
+//                joinPoint.getTarget().getClass().getSimpleName(),
+//                returnValue.toString().substring(0,
+//                        Math.min(returnValue.toString().length(), 1000)));
+//    }
 }

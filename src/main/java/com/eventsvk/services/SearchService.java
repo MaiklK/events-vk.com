@@ -12,6 +12,7 @@ import com.vk.api.sdk.exceptions.ApiTooManyException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -94,10 +95,11 @@ public class SearchService {
             this.eventsId = eventsId;
         }
 
+        @SneakyThrows
         @Override
         public void run() {
             AccessToken token = tokenService.getTokenNotInUse();
-            tokenService.setTokenInUse(token);
+            tokenService.setTokenStatus(token, true);
             log.debug("Токен с id: {} взят в работу", token.getId());
             for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
                 try {
@@ -110,7 +112,7 @@ public class SearchService {
                 } catch (ApiException | ClientException e) {
                     log.error("Ошибка запроса вконтакте: {}", e.getMessage());
                 } finally {
-                    tokenService.setTokenNotInUse(token);
+                    tokenService.setTokenStatus(token, false);
                     log.debug("Токен с id: {} возвращен в прежнее состояние", token.getId());
                 }
             }
