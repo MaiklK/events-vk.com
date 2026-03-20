@@ -20,6 +20,9 @@ query.txt
 
 ### IntelliJ IDEA ###
 .idea
+.explyt
+.qodo
+.PVS-Studio
 *.iws
 *.iml
 *.ipr

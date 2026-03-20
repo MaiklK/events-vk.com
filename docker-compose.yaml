@@ -13,16 +13,6 @@ services:
      PGDATA: /var/lib/postgresql/data
      restart: always
 
-  mySQL:
-    image: mysql:8.0
-    container_name: mySQL_vk_db
-    ports:
-      - '3306:3306'
-    environment:
-      - MYSQL_DATABASE=root
-      - MYSQL_ROOT_PASSWORD=root
-    restart: always
-
 #  events-vk.com:
 #    image: events-vk.com:latest
 #    ports:
@@ -32,22 +22,3 @@ services:
 #      - SPRING_DATASOURCE_USERNAME=postgres
 #      - SPRING_DATASOURCE_PASSWORD=postgres
 #      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
-
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus_vk
-    restart: unless-stopped
-    ports:
-      - '9090:9090'
-    volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana_vk
-    restart: unless-stopped
-    ports:
-      - '3000:3000'
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
