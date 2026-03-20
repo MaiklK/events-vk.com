@@ -18,8 +18,8 @@ spring:
       client:
         registration:
           vkontakte:
-            client-id: 51709910
-            client-secret: A3hAXTv4Qn70zLJytPxZ
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
             scope: email
             client-name: VKontakte
             authorization-grant-type: authorization_code

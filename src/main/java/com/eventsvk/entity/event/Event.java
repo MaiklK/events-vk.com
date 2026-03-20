@@ -2,7 +2,6 @@ package com.eventsvk.entity.event;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -68,7 +67,7 @@ public class Event implements Comparable<Event> {
     }
 
     @Override
-    public int compareTo(@NotNull Event event) {
-            return this.startDate - event.startDate;
+    public int compareTo(Event event) {
+        return this.startDate - event.startDate;
     }
 }
