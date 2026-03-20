@@ -2,23 +2,21 @@ package com.eventsvk.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 @Getter
 @Setter
+@Table(name = "user_personal")
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "user_personal")
+@Builder
 public class UserPersonal {
     @Id
-    private String user_id;
+    private String userId;
     @Column
     private int political;
     @Column(name = "inspire_by")
@@ -38,7 +36,7 @@ public class UserPersonal {
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "vk_id")
     private User user;
 
     @Override
