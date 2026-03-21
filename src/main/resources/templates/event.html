@@ -25,11 +25,11 @@
     <td>Название</td>
     <td>Ссылка</td>
   </tr>
-  <tr th:each="event : ${events}">
-    <td th:utext="${event.getId()}"></td>
-    <td th:utext="${event.getName()}"></td>
+  <tr th:each="eventEntity : ${events}">
+    <td th:utext="${eventEntity.getId()}"></td>
+    <td th:utext="${eventEntity.getName()}"></td>
     <td>
-      <a th:href="'https://vk.com/event' + ${event.getId()}">ссылка</a>
+      <a th:href="'https://vk.com/eventEntity' + ${eventEntity.getId()}">ссылка</a>
     </td>
   </tr>
 </table>

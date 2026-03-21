@@ -55,8 +55,6 @@ public class VkAccessTokenResponseClient implements OAuth2AccessTokenResponseCli
             throw new IllegalStateException("VK token response body is null");
         }
 
-        log.debug("VK token response: {}", body);
-
         String accessToken = ExtractUtil.extractRequiredString(body);
         long expiresIn = ExtractUtil.extractLong(body.get("expires_in"));
 
