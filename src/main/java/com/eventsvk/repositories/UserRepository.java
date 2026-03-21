@@ -1,10 +1,7 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.entity.user.User;
+import com.eventsvk.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByVkId(Long userId);
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 }

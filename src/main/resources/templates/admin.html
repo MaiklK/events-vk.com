@@ -43,19 +43,19 @@
 <div class="container">
     <h1 class="m-3 fw-bold">Панель Админа</h1>
     <section class="tab-content" id="homeTabContent">
-        <!--        <article class="tab-pane fade show active" id="admin" role="ADMIN" aria-label="admin">-->
+        <!--        <article class="tab-pane fade show active" id="admin" roleEntity="ADMIN" aria-label="admin">-->
         <div class="card">
             <div class="tab-content" id="tabContent">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item" role="presentation">
+                <ul class="nav nav-tabs" roleEntity="tablist">
+                    <li class="nav-item" roleEntity="presentation">
                         <button class="nav-link active" id="userTable-tab" data-bs-toggle="tab"
-                                data-bs-target="#userTable" type="button" role="tab" aria-controls="userTable"
+                                data-bs-target="#userTable" type="button" roleEntity="tab" aria-controls="userTable"
                                 aria-selected="true">
                         </button>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="userTable" role="tabpanel"
+                    <div class="tab-pane fade show active" id="userTable" roleEntity="tabpanel"
                          aria-labelledby="userTable">
                         <div class="card">
                             <div class="card-header">
@@ -75,42 +75,42 @@
                                         <th>Update</th>
                                         <th>Ban</th>
                                     </tr>
-                                    <tr th:each="user : ${users}">
-                                        <td th:utext="${user.getVkid()}"></td>
+                                    <tr th:each="userEntity : ${users}">
+                                        <td th:utext="${userEntity.getVkid()}"></td>
                                         <td>
                                             <div class="image-zoom">
-                                                <img th:src="${user.getPhotoBig()}"
+                                                <img th:src="${userEntity.getPhotoBig()}"
                                                      alt="аватарка" class="small-image">
                                             </div>
                                         </td>
-                                        <td th:utext="${user.getFirstName()}"></td>
-                                        <td th:utext="${user.getLastName()}"></td>
-                                        <td th:utext="${user.roles}"></td>
+                                        <td th:utext="${userEntity.getFirstName()}"></td>
+                                        <td th:utext="${userEntity.getLastName()}"></td>
+                                        <td th:utext="${userEntity.roles}"></td>
                                         <td>
                                             <a type="button" class="btn btn-sm btn-primary"
                                                data-bs-toggle="modal"
                                                data-bs-target="#editModal"
-                                               th:data-bs-target="${'#editModal'+user.getVkid()}">Update</a>
+                                               th:data-bs-target="${'#editModal'+userEntity.getVkid()}">Update</a>
                                         </td>
                                         <td>
                                             <a type="button" class="btn btn-sm btn-danger"
                                                data-bs-toggle="modal"
                                                data-bs-target="#ban"
-                                               th:data-bs-target="${'#ban'+user.getVkid()}">Ban</a>
+                                               th:data-bs-target="${'#ban'+userEntity.getVkid()}">Ban</a>
                                         </td>
-                                        <div class="modal fade" th:id="${'editModal'+ user.getVkid()}"
+                                        <div class="modal fade" th:id="${'editModal'+ userEntity.getVkid()}"
                                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" modal-dialog-centered>
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="editModalLabel">Edit
-                                                            user</h5>
+                                                            userEntity</h5>
                                                         <button type="button" class="btn-close"
                                                                 data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
-                                                    <form th:action="@{/user/upate}"
-                                                          th:object="${user}" th:method="PUT">
+                                                    <form th:action="@{/userEntity/upate}"
+                                                          th:object="${userEntity}" th:method="PUT">
                                                         <div class="modal-body col-md text-center">
                                                             <br>
                                                             <label for="id"><b>ID в базе</b></label>
@@ -136,10 +136,10 @@
                                                             <select class="form-control" id="roles"
                                                                     name="roles"
                                                                     multiple="multiple">
-                                                                <option th:each="role : ${roles}"
-                                                                        th:selected="${role.getName()}"
-                                                                        th:value="${role.getId()}"
-                                                                        th:text="${role.getName()}">Role name
+                                                                <option th:each="roleEntity : ${roles}"
+                                                                        th:selected="${roleEntity.getName()}"
+                                                                        th:value="${roleEntity.getId()}"
+                                                                        th:text="${roleEntity.getName()}">Role name
                                                                 </option>
                                                             </select>
                                                             <br><br>
@@ -156,36 +156,36 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal fade" th:id="${'ban'+user.getVkid()}"
+                                        <div class="modal fade" th:id="${'ban'+userEntity.getVkid()}"
                                              aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-dialog" roleEntity="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">BAN
-                                                            user</h5>
+                                                            userEntity</h5>
                                                         <button type="button" class="btn-close"
                                                                 data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
                                                     <form class="modal-body col-md text-center"
-                                                          th:action="@{/user/{id}(id=${user.getVkid()})}"
+                                                          th:action="@{/userEntity/{id}(id=${userEntity.getVkid()})}"
                                                           th:method="PUT">
                                                         <div class="modal-body col-md">
                                                             <label for="vkid1"><b>ID вконтакте</b></label>
                                                             <input th:name="vkid" th:type="text"
                                                                    class="form-control"
-                                                                   id="vkid1" th:value="${user.getVkid()}"
+                                                                   id="vkid1" th:value="${userEntity.getVkid()}"
                                                                    disabled/>
                                                             <br><label for="name1"><b>Имя</b></label>
                                                             <input th:name="name" th:type="text"
                                                                    class="form-control"
-                                                                   id="name1" th:value="${user.getFirstName()}"
+                                                                   id="name1" th:value="${userEntity.getFirstName()}"
                                                                    disabled/>
                                                             <br>
                                                             <label for="surname1"><b>Фамилия</b></label>
                                                             <input th:name="surname" th:type="text"
                                                                    class="form-control" id="surname1"
-                                                                   th:value="${user.getLastName()}" disabled/>
+                                                                   th:value="${userEntity.getLastName()}" disabled/>
                                                             <br>
                                                             <br>
                                                         </div>

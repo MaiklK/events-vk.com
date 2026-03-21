@@ -1,14 +1,14 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.entity.user.AccessToken;
+import com.eventsvk.entity.user.AccessTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface AccessTokenRepository extends JpaRepository<AccessToken, String> {
+public interface AccessTokenRepository extends JpaRepository<AccessTokenEntity, Long> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM access_tokens WHERE is_in_use = false" +
             " AND is_valid = true ORDER BY random() LIMIT 1")
-    Optional<AccessToken> getRandomTokenNotInUse();
+    Optional<AccessTokenEntity> getRandomTokenNotInUse();
 }

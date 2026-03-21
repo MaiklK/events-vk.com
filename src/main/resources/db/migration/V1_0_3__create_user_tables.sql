@@ -11,7 +11,7 @@ CREATE TABLE if NOT EXISTS PUBLIC.users
     password              VARCHAR(255),
     photo_big             VARCHAR(255),
     photo_id              VARCHAR(30),
-    vkid                  VARCHAR(30) NOT NULL PRIMARY KEY
+    vk_id                 BIGINT(30) NOT NULL PRIMARY KEY
     );
 
 CREATE TABLE if NOT EXISTS PUBLIC.user_counters

@@ -1,6 +1,7 @@
 package com.eventsvk.configuration;
 
 import com.eventsvk.security.VkAccessTokenResponseClient;
+import com.eventsvk.security.VkOAuth2SuccessHandler;
 import com.eventsvk.security.VkOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ public class SecurityConfig {
 
     private final VkOAuth2UserService vkOAuth2UserService;
     private final VkAccessTokenResponseClient vkAccessTokenResponseClient;
+    private final VkOAuth2SuccessHandler vkOAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,7 +32,7 @@ public class SecurityConfig {
                                 .accessTokenResponseClient(vkAccessTokenResponseClient)
                         )
                         .userInfoEndpoint(userInfo -> userInfo.userService(vkOAuth2UserService))
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(vkOAuth2SuccessHandler)
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")

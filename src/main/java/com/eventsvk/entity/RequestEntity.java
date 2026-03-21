@@ -1,4 +1,4 @@
-package com.eventsvk.entity.event;
+package com.eventsvk.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Request {
+public class RequestEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;

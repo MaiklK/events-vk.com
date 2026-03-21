@@ -1,9 +1,13 @@
-package com.eventsvk.entity.event;
+package com.eventsvk.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
+
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -14,37 +18,33 @@ import org.hibernate.annotations.UuidGenerator;
 @Table(name = "events")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Event implements Comparable<Event> {
+public class EventEntity implements Comparable<EventEntity> {
+
     @Id
-    @GeneratedValue
-    @Column(name = "id")
-    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
-    private String uuid;
-    @Column(name = "event_vkid")
-    private String id;
+    private Long eventId;
     @Column
     private String name;
-    @Column(name = "screen_name")
+    @Column
     private String screenName;
     @Column
     private String description;
-    @Column(name = "has_photo")
+    @Column
     private int hasPhoto;
-    @Column(name = "members_count")
+    @Column
     private int membersCount;
-    @Column(name = "public_date_label")
+    @Column
     private String publicDateLabel;
     @Column
     private String site;
     @Column
     private String activity;
-    @Column(name = "start_date ")
+    @Column
     private int startDate;
-    @Column(name = "finish_date")
+    @Column
     private int finishDate;
     @Column
     private String status;
-    @Column(name = "city_id")
+    @Column
     private int cityId;
 
 //    @Column
@@ -54,7 +54,7 @@ public class Event implements Comparable<Event> {
 
     @Override
     public int hashCode() {
-        return Integer.parseInt(this.id);
+        return Objects.hash(this.eventId);
     }
 
     @Override
@@ -62,12 +62,12 @@ public class Event implements Comparable<Event> {
         if (this.getClass() != event.getClass()) {
             return false;
         }
-        Event otherEvent = (Event) event;
-        return this.id.equals(otherEvent.id);
+        EventEntity otherEventEntity = (EventEntity) event;
+        return this.eventId.equals(otherEventEntity.eventId);
     }
 
     @Override
-    public int compareTo(Event event) {
-        return this.startDate - event.startDate;
+    public int compareTo(EventEntity eventEntity) {
+        return this.startDate - eventEntity.startDate;
     }
 }

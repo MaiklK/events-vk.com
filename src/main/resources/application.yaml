@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -42,3 +42,4 @@ logging:
     sun.rmi.transport.tcp: WARN
     sun.rmi.loader: WARN
     jdk.event.security: WARN
+    org.thymeleaf.TemplateEngine: WARN

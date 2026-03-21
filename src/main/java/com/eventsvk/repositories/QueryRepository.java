@@ -1,7 +1,7 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.entity.event.Request;
+import com.eventsvk.entity.RequestEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface QueryRepository extends JpaRepository<Request, Integer> {
+public interface QueryRepository extends JpaRepository<RequestEntity, Integer> {
 }

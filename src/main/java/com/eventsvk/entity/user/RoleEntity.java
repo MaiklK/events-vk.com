@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Role implements GrantedAuthority {
+public class RoleEntity implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
@@ -22,11 +22,7 @@ public class Role implements GrantedAuthority {
 
     @Transient
     @ManyToMany(mappedBy = "roles")
-    private List<User> users;
-
-    public Role(String roleName) {
-        this.name = roleName;
-    }
+    private List<UserEntity> userEntities;
 
     @Override
     public String getAuthority() {

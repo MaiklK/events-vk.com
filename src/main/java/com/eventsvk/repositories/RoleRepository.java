@@ -1,7 +1,10 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.entity.user.Role;
+import com.eventsvk.entity.user.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+import java.util.List;
+
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
+    List<RoleEntity> findByName(String name);
 }
