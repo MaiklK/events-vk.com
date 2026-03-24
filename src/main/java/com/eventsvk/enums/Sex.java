@@ -15,5 +15,4 @@ public enum Sex {
         this.code = code;
         this.description = description;
     }
-
 }

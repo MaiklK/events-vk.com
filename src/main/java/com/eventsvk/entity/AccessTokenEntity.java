@@ -1,4 +1,4 @@
-package com.eventsvk.entity.user;
+package com.eventsvk.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 public class AccessTokenEntity {
     @Id
-    private long id;
+    private Long id;
     @Column(name = "is_in_use")
     private boolean isInUse;
     @Column(name = "is_valid")

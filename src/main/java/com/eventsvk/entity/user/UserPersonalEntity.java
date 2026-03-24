@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 public class UserPersonalEntity {
     @Id
-    private long userId;
+    private Long userVkId;
     @Column
     private int political;
     @Column(name = "inspire_by")
@@ -29,6 +29,6 @@ public class UserPersonalEntity {
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "vk_id")
+    @JoinColumn(name = "user_vk_id", referencedColumnName = "user_vk_id")
     private UserEntity user;
 }

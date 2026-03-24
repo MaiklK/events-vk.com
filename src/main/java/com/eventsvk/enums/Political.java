@@ -1,6 +1,9 @@
 package com.eventsvk.enums;
 
-public enum PoliticalEnum {
+import lombok.Getter;
+
+@Getter
+public enum Political {
     COMMUNIST(1, "коммунистические"),
     SOCIALIST(2, "социалистические"),
     MODERATE(3, "умеренные"),
@@ -14,17 +17,8 @@ public enum PoliticalEnum {
     private final int id;
     private final String title;
 
-    PoliticalEnum(int id, String title) {
+    Political(int id, String title) {
         this.id = id;
         this.title = title;
-    }
-
-    public String getTitleById(int id) {
-        for (PoliticalEnum value : PoliticalEnum.values()) {
-            if (value.id == id) {
-                return value.title;
-            }
-        }
-        return null;
     }
 }

@@ -16,6 +16,6 @@ import lombok.Setter;
 public class CountryEntity {
     @Id
     private int id;
-    @Column
+    @Column(unique = true)
     private String title;
 }

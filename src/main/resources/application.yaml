@@ -43,3 +43,4 @@ logging:
     sun.rmi.loader: WARN
     jdk.event.security: WARN
     org.thymeleaf.TemplateEngine: WARN
+    com.zaxxer.hikari.pool.HikariPool: WARN

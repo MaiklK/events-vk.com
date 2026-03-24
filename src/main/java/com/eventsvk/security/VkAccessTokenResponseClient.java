@@ -1,22 +1,18 @@
 package com.eventsvk.security;
 
-import com.eventsvk.util.ExtractUtil;
+import com.vk.api.sdk.client.VkApiClient;
+import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.objects.UserAuthResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,57 +23,56 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class VkAccessTokenResponseClient implements OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final static String USER_ID = "user_id";
+    private final static String EMAIL = "email";
+    private final static String OAUTH_VK_ERROR = "Ошибка авторизации ВК: ";
+
+    private final VkApiClient vkApiClient;
 
     @Override
     public OAuth2AccessTokenResponse getTokenResponse(OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest) {
-        ClientRegistration clientRegistration = authorizationGrantRequest.getClientRegistration();
-        MultiValueMap<String, String> formParameters = buildFormParameters(authorizationGrantRequest, clientRegistration);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        UserAuthResponse authResponse = getAuthResponse(authorizationGrantRequest);
 
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(formParameters, headers);
+        String accessToken = authResponse.getAccessToken();
+        Integer expiresIn = authResponse.getExpiresIn();
 
-        var response = restTemplate.exchange(
-                clientRegistration.getProviderDetails().getTokenUri(),
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> body = response.getBody();
-        if (body == null) {
-            throw new IllegalStateException("VK token response body is null");
+        Map<String, Object> additionalParams = new HashMap<>();
+        additionalParams.put(USER_ID, authResponse.getUserId());
+        if (authResponse.getEmail() != null) {
+            additionalParams.put(EMAIL, authResponse.getEmail());
         }
-
-        String accessToken = ExtractUtil.extractRequiredString(body);
-        long expiresIn = ExtractUtil.extractLong(body.get("expires_in"));
-
-        Map<String, Object> additionalParameters = new HashMap<>(body);
 
         return OAuth2AccessTokenResponse.withToken(accessToken)
                 .tokenType(OAuth2AccessToken.TokenType.BEARER)
                 .expiresIn(expiresIn)
                 .scopes(Collections.emptySet())
-                .additionalParameters(additionalParameters)
+                .additionalParameters(additionalParams)
                 .build();
     }
 
-    private static MultiValueMap<String, String> buildFormParameters(OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest,
-                                                                     ClientRegistration clientRegistration) {
-        var exchange = authorizationGrantRequest.getAuthorizationExchange();
+    private UserAuthResponse getAuthResponse(OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest) {
+        var clientRegistration = authorizationGrantRequest.getClientRegistration();
+        var authorizationResponse = authorizationGrantRequest.getAuthorizationExchange().getAuthorizationResponse();
+        var code = authorizationResponse.getCode();
+        var clientId = clientRegistration.getClientId();
+        var clientSecret = clientRegistration.getClientSecret();
+        var redirectUri = authorizationResponse.getRedirectUri();
 
-        MultiValueMap<String, String> formParameters = new LinkedMultiValueMap<>();
-        formParameters.add(OAuth2ParameterNames.GRANT_TYPE, AuthorizationGrantType.AUTHORIZATION_CODE.getValue());
-        formParameters.add(OAuth2ParameterNames.CODE, exchange.getAuthorizationResponse().getCode());
-        formParameters.add(OAuth2ParameterNames.REDIRECT_URI, exchange.getAuthorizationRequest().getRedirectUri());
-        formParameters.add(OAuth2ParameterNames.CLIENT_ID, clientRegistration.getClientId());
-        formParameters.add(OAuth2ParameterNames.CLIENT_SECRET, clientRegistration.getClientSecret());
-        return formParameters;
+        try {
+            return vkApiClient.oAuth()
+                    .userAuthorizationCodeFlow(Integer.valueOf(clientId), clientSecret, redirectUri, code)
+                    .execute();
+
+        } catch (ApiException | ClientException e) {
+            log.error(OAUTH_VK_ERROR + "{}", e.getMessage());
+            throw new OAuth2AuthorizationException(
+                    new OAuth2Error(OAUTH_VK_ERROR,
+                            "Не удалось получить токен: " + e.getMessage(), null),
+                    e);
+        }
     }
 }

@@ -17,28 +17,26 @@ public class VkUserMapper {
     /**
      * Маппинг UserFull из VK SDK на нашу сущность
      */
-    public UserEntity mapToUserEntity(UserFull vkUser) {
-        if (vkUser == null) {
+    public UserEntity mapToUserEntity(UserFull from, UserEntity to) {
+        if (from == null) {
             return null;
         }
 
-        UserEntity userEntity = new UserEntity();
+        to.setUserVkId(from.getId());
+        to.setFirstName(from.getFirstName());
+        to.setLastName(from.getLastName());
+        to.setBirthdayDate(from.getBdate());
+        to.setSex(mapToSex(from));
+        to.setClosed(Boolean.TRUE.equals(from.getIsClosed()));
+        to.setPhotoBig(resolvePhotoUrl(from));
+        to.setPhotoId(from.getPhotoId());
+        to.setLocked(false);
+        to.setCityId(from.getId());
 
-        userEntity.setVkId(vkUser.getId());
-        userEntity.setFirstName(vkUser.getFirstName());
-        userEntity.setLastName(vkUser.getLastName());
-        userEntity.setBirthdayDate(vkUser.getBdate());
-        userEntity.setSex(mapToSex(vkUser));
-        userEntity.setClosed(Boolean.TRUE.equals(vkUser.getIsClosed()));
-        userEntity.setPhotoBig(resolvePhotoUrl(vkUser));
-        userEntity.setPhotoId(vkUser.getPhotoId());
-        userEntity.setLocked(false);
-        userEntity.setCityId(vkUser.getId());
+        to.setCounters(mapToUserCounters(from.getId(), from.getCounters()));
+        to.setUserPersonal(mapToUserPersonal(from.getId(), from.getPersonal()));
 
-        userEntity.setCounters(mapToUserCounters(vkUser.getId(), vkUser.getCounters()));
-        userEntity.setUserPersonal(mapToUserPersonal(vkUser.getId(), vkUser.getPersonal()));
-
-        return userEntity;
+        return to;
     }
 
     /**
@@ -50,7 +48,7 @@ public class VkUserMapper {
         }
 
         UserCountersEntity counters = new UserCountersEntity();
-        counters.setUserId(userId);
+        counters.setUserVkId(userId);
         counters.setAlbums(defaultInt(vkCounters.getAlbums()));
         counters.setAudios(defaultInt(vkCounters.getAudios()));
         counters.setFollowers(defaultInt(vkCounters.getFollowers()));
@@ -74,7 +72,7 @@ public class VkUserMapper {
         }
 
         UserPersonalEntity personal = new UserPersonalEntity();
-        personal.setUserId(userId);
+        personal.setUserVkId(userId);
         personal.setPolitical(defaultInt(vkPersonal.getPolitical()));
         personal.setInspiredBy(vkPersonal.getInspiredBy());
         personal.setPeopleMain(defaultInt(vkPersonal.getPeopleMain()));
