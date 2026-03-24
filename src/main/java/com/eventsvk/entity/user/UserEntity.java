@@ -7,7 +7,6 @@ import org.hibernate.annotations.FetchMode;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @Table(name = "vk_users")
 public class UserEntity {
     @Id
-    private long vkId;
+    private Long userVkId;
     @Column
     private String firstName;
     @Column
@@ -53,29 +52,22 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "User\n{ id : "
-                + this.vkId + ", Имя : "
-                + this.firstName + "\nФамилия : "
-                + this.lastName + "account is banned: "
-                + this.isLocked + "Роли: "
-                + this.roles + " }";
-    }
-
-    public String getRolesAsString() {
-        return roles.stream()
-                .map(RoleEntity::getName)
-                .collect(Collectors.joining(", "));
+        return """
+                User
+                { id : %d, Имя : %s
+                Фамилия : %s, account is banned: %s}"""
+                .formatted(userVkId, firstName, lastName, isLocked);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserEntity userEntity)) return false;
-        return vkId == userEntity.vkId;
+        return Objects.equals(userVkId, userEntity.userVkId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.vkId);
+        return Objects.hash(this.userVkId);
     }
 }

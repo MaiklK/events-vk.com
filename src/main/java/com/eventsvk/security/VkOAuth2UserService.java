@@ -21,40 +21,52 @@ import java.util.Map;
 @Service
 public class VkOAuth2UserService extends DefaultOAuth2UserService {
 
+    private final static String ID = "id";
+    private final static String ERROR = "error";
+    private final static String ROLE_USER = "ROLE_USER";
+    private final static String RESPONSE = "response";
+    private final static String VKONTAKTE = "vkontakte";
+    private final static String AUTHORIZATION_ERROR = "Ошибка авторизации через VK: ";
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User delegateUser = super.loadUser(userRequest);
+        OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        if (!"vkontakte".equals(registrationId)) {
-            return delegateUser;
+        if (!VKONTAKTE.equals(userRequest.getClientRegistration().getRegistrationId())) {
+            return oAuth2User;
         }
 
-        Map<String, Object> attributes = new HashMap<>(delegateUser.getAttributes());
-        log.debug("VK raw attributes: {}", attributes);
+        Map<String, Object> attributes = new HashMap<>(oAuth2User.getAttributes());
 
-        Object error = attributes.get("error");
+        Object error = attributes.get(ERROR);
         if (error != null) {
-            throw new OAuth2AuthenticationException("VK error: " + error);
+            log.error(AUTHORIZATION_ERROR + "{}", error);
+            throw new OAuth2AuthenticationException(AUTHORIZATION_ERROR + error);
         }
 
-        Object responseObj = attributes.get("response");
-        if (responseObj instanceof List<?> list && !list.isEmpty()) {
-            Object first = list.getFirst();
-            if (first instanceof Map<?, ?> userMapRaw) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> userMap = (Map<String, Object>) userMapRaw;
-                attributes.putAll(userMap);
-                attributes.remove("response");
-            } else {
-                log.warn("VK response[0] is not a Map: {}", first);
-            }
-        } else {
-            log.warn("VK response attribute has unexpected format: {}", responseObj);
+        mergeVkResponseAttributes(attributes);
+
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(ROLE_USER));
+        return new DefaultOAuth2User(authorities, attributes, ID);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void mergeVkResponseAttributes(Map<String, Object> attributes) {
+        var response = attributes.get(RESPONSE);
+        if (!(response instanceof List<?> list) || list.isEmpty()) {
+            log.warn("Атрибут VK 'response' имеет неожиданный формат: {}", response);
+            return;
         }
 
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        return new DefaultOAuth2User(authorities, attributes, "id");
+        var firstElement = list.getFirst();
+        if (!(firstElement instanceof Map<?, ?> userMapRaw)) {
+            log.warn("VK response[0] не является Map: {}", firstElement);
+            return;
+        }
+
+        var userMap = (Map<String, Object>) userMapRaw;
+        attributes.putAll(userMap);
+        attributes.remove(RESPONSE);
     }
 }
 

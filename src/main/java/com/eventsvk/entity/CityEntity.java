@@ -1,9 +1,6 @@
 package com.eventsvk.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,11 +12,11 @@ import lombok.*;
 @NoArgsConstructor
 public class CityEntity {
     @Id
-    private long id;
-    @Column
+    private Long id;
+    @Column(unique = true)
     private String title;
-    @Column
+    @Column(unique = true)
     private String area;
-    @Column
+    @Column(unique = true)
     private String region;
 }

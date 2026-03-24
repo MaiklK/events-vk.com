@@ -19,7 +19,6 @@ import java.util.Objects;
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventEntity implements Comparable<EventEntity> {
-
     @Id
     private Long eventId;
     @Column

@@ -16,7 +16,7 @@ import java.util.List;
 public class RoleEntity implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private Long id;
     @Column(unique = true)
     private String name;
 

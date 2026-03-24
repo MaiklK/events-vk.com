@@ -14,7 +14,7 @@ import lombok.Setter;
 @Table(name = "user_counters")
 public class UserCountersEntity {
     @Id
-    private long userId;
+    private Long userVkId;
     @Column
     private int albums;
     @Column
@@ -34,9 +34,9 @@ public class UserCountersEntity {
     @Column
     private int videos;
     @Column(name = "clips_followers")
-    private long clipsFollowers;
+    private Long clipsFollowers;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "vk_id")
+    @JoinColumn(name = "user_vk_id", referencedColumnName = "user_vk_id")
     private UserEntity user;
 }

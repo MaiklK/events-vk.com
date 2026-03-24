@@ -1,6 +1,9 @@
 package com.eventsvk.enums;
 
-public enum LifeMainEnum {
+import lombok.Getter;
+
+@Getter
+public enum LifeMain {
     FAMILY_AND_CHILDREN(1, "семья и дети"),
     CAREER_AND_MONEY(2, "карьера и деньги"),
     ENTERTAINMENT_AND_RECREATION(3, "развлечения и отдых"),
@@ -13,17 +16,8 @@ public enum LifeMainEnum {
     private final int id;
     private final String title;
 
-    LifeMainEnum(int id, String title) {
+    LifeMain(int id, String title) {
         this.id = id;
         this.title = title;
-    }
-
-    public String getTitleById(int id) {
-        for (LifeMainEnum value : LifeMainEnum.values()) {
-            if (value.id == id) {
-                return value.title;
-            }
-        }
-        return null;
     }
 }

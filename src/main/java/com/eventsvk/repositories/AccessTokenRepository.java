@@ -1,6 +1,6 @@
 package com.eventsvk.repositories;
 
-import com.eventsvk.entity.user.AccessTokenEntity;
+import com.eventsvk.entity.AccessTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
