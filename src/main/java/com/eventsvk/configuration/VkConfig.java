@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class VkConfig {
-
     @Bean
     public VkApiClient vkApiClient() {
         TransportClient transportClient = new HttpTransportClient();

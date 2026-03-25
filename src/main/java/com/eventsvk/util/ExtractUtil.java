@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ExtractUtil {
-
     public static Long extractLong(Object value) {
         if (value == null) {
             return 0L;

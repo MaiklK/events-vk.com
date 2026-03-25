@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CityServiceImpl implements CityService {
-
     private final CityRepository cityRepository;
 
     @Override

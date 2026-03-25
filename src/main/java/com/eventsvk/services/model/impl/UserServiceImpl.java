@@ -10,6 +10,10 @@ import com.vk.api.sdk.objects.users.Fields;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,6 +72,12 @@ public class UserServiceImpl implements UserService {
         }
 
         return userInfo;
+    }
+
+    @Override
+    public Page<UserEntity> findAllSortedById(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "userVkId"));
+        return userRepository.findAll(pageable);
     }
 
 }

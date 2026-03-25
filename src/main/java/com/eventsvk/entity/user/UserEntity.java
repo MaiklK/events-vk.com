@@ -23,6 +23,8 @@ public class UserEntity {
     @Column
     private String lastName;
     @Column
+    private String password;
+    @Column
     private String birthdayDate;
     @Column
     private int sex;
@@ -33,7 +35,7 @@ public class UserEntity {
     @Column
     private String photoId;
     @Column
-    private boolean isLocked;
+    private Boolean isLocked;
     @Column
     private Long cityId;
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AccessTokenServiceImpl implements AccessTokenService {
-
     private final AccessTokenRepository accessTokenRepository;
 
     @Override

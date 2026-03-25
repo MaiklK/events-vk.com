@@ -3,7 +3,7 @@ package com.eventsvk.security;
 import com.eventsvk.entity.AccessTokenEntity;
 import com.eventsvk.entity.user.RoleEntity;
 import com.eventsvk.entity.user.UserEntity;
-import com.eventsvk.mapper.VkUserMapper;
+import com.eventsvk.mapper.UserMapper;
 import com.eventsvk.services.VkPostAuthService;
 import com.eventsvk.services.model.CityService;
 import com.eventsvk.services.model.RoleService;
@@ -21,16 +21,14 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.eventsvk.constant.AsyncExecutorName.VK_POST_OAUTH_SAVE;
+import static com.eventsvk.constant.SecurityConstant.ROLE_USER;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class VkPostAuthProcessor {
-
-    private final static String USER_ROLE = "ROLE_USER";
-
     private final UserService userService;
-    private final VkUserMapper vkUserMapper;
+    private final UserMapper userMapper;
     private final RoleService roleService;
     private final CityService cityService;
     private final VkPostAuthService vkPostAuthService;
@@ -64,13 +62,14 @@ public class VkPostAuthProcessor {
         if (existingUser.isEmpty()) {
             var newUser = new UserEntity();
             newUser.setRoles(Set.of(getDefaultUserRole()));
-            return vkUserMapper.mapToUserEntity(vkUser, newUser);
+            newUser.setIsLocked(Boolean.TRUE.equals(newUser.getIsLocked()));
+            return userMapper.mapFromVkUserToUserEntity(vkUser, newUser);
         }
-        return vkUserMapper.mapToUserEntity(vkUser, existingUser.get());
+        return userMapper.mapFromVkUserToUserEntity(vkUser, existingUser.get());
     }
 
     private RoleEntity getDefaultUserRole() {
-        return roleService.getRoleByName(USER_ROLE);
+        return roleService.getRoleByName(ROLE_USER);
     }
 
     private AccessTokenEntity buildAccessTokenEntity(Long userVkId, String tokenValue) {
