@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
-
     private final RoleRepository roleRepository;
     private final ConcurrentMap<String, RoleEntity> cache = new ConcurrentHashMap<>();
 

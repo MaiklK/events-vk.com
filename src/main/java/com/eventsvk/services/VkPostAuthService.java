@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class VkPostAuthService {
-
     private final UserService userService;
     private final AccessTokenService accessTokenService;
 
