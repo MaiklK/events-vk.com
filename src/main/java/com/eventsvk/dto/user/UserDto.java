@@ -1,16 +1,18 @@
-package com.eventsvk.dto;
+package com.eventsvk.dto.user;
 
 import com.eventsvk.entity.user.RoleEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@Builder
+@Setter
+@SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto implements Serializable {
     private Long userVkId;

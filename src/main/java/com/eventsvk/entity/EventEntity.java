@@ -20,11 +20,15 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventEntity implements Comparable<EventEntity> {
     @Id
-    private Long eventId;
+    private Long eventVkId;
     @Column
     private String name;
     @Column
     private String screenName;
+    @Column
+    private int isClosed;
+    @Column
+    private String deactivated;
     @Column
     private String description;
     @Column
@@ -53,7 +57,7 @@ public class EventEntity implements Comparable<EventEntity> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.eventId);
+        return Objects.hash(this.eventVkId);
     }
 
     @Override
@@ -62,7 +66,7 @@ public class EventEntity implements Comparable<EventEntity> {
             return false;
         }
         EventEntity otherEventEntity = (EventEntity) event;
-        return this.eventId.equals(otherEventEntity.eventId);
+        return this.eventVkId.equals(otherEventEntity.eventVkId);
     }
 
     @Override

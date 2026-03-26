@@ -14,18 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.eventsvk.constant.SecurityConstant.*;
+
 /**
  * Сервис обработки авторизацию через VK OAuth2
  */
 @Slf4j
 @Service
 public class VkOAuth2UserService extends DefaultOAuth2UserService {
-
-    private final static String ID = "id";
     private final static String ERROR = "error";
-    private final static String ROLE_USER = "ROLE_USER";
-    private final static String RESPONSE = "response";
-    private final static String VKONTAKTE = "vkontakte";
     private final static String AUTHORIZATION_ERROR = "Ошибка авторизации через VK: ";
 
     @Override

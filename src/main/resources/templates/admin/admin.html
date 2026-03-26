@@ -179,7 +179,15 @@
             const userId = user.userVkId ?? user.vkid ?? user.id;
             const isBanned = user.banned === true || user.locked === true || user.enabled === false;
 
-            tr.appendChild(createTextCell(userId));
+            const idCell = document.createElement('td');
+            if (userId != null) {
+                const link = document.createElement('a');
+                link.href = `/admin/${userId}`;
+                link.textContent = userId;
+                link.target = '_blank';
+                idCell.appendChild(link);
+            }
+            tr.appendChild(idCell);
 
             const photoCell = document.createElement('td');
             if (user.photoBig) {

@@ -33,7 +33,7 @@ public class UserCountersEntity {
     private int photos;
     @Column
     private int videos;
-    @Column(name = "clips_followers")
+    @Column
     private Long clipsFollowers;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

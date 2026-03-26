@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Некорректный формат username (ожидался VK ID): " + username);
         }
 
-        UserEntity userEntity = userService.findById(userVkId)
+        UserEntity userEntity = userService.findUserByIdOrGetFromCache(userVkId)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь с VK ID " + userVkId + " не найден"));
 
         boolean enabled = userEntity.getIsLocked();

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -17,5 +19,10 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     public void saveAccessToken(AccessTokenEntity accessToken) {
         accessTokenRepository.save(accessToken);
         log.debug("AccessToken для id: {}, сохранен", accessToken.getId());
+    }
+
+    @Override
+    public Optional<AccessTokenEntity> findAccessTokenByUserId(Long userVkId) {
+        return accessTokenRepository.findById(userVkId);
     }
 }

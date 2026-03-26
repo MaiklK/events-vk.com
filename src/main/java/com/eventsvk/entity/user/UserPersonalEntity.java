@@ -15,17 +15,17 @@ public class UserPersonalEntity {
     @Id
     private Long userVkId;
     @Column
-    private int political;
-    @Column(name = "inspire_by")
+    private Integer political;
+    @Column
     private String inspiredBy;
-    @Column(name = "people_main")
-    private int peopleMain;
-    @Column(name = "life_main")
-    private int lifeMain;
     @Column
-    private int smoking;
+    private Integer peopleMain;
     @Column
-    private int alcohol;
+    private Integer lifeMain;
+    @Column
+    private Integer smoking;
+    @Column
+    private Integer alcohol;
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.EAGER)
