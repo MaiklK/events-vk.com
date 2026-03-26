@@ -1,10 +1,13 @@
 package com.eventsvk.mapper;
 
-import com.eventsvk.dto.UserDto;
+import com.eventsvk.dto.user.UserCounterDto;
+import com.eventsvk.dto.user.UserDto;
+import com.eventsvk.dto.user.UserFullDto;
+import com.eventsvk.dto.user.UserPersonalDto;
 import com.eventsvk.entity.user.UserCountersEntity;
 import com.eventsvk.entity.user.UserEntity;
 import com.eventsvk.entity.user.UserPersonalEntity;
-import com.eventsvk.enums.UserSex;
+import com.eventsvk.enums.*;
 import com.eventsvk.util.ExtractUtil;
 import com.vk.api.sdk.objects.base.Sex;
 import com.vk.api.sdk.objects.users.Personal;
@@ -18,10 +21,15 @@ public interface UserMapper {
     @Mapping(target = "sex", source = "user.sex", qualifiedByName = "sexCodeToDescription")
     UserDto mapFromUserEntityToUserDto(UserEntity user);
 
+    @Mapping(target = "sex", source = "sex", qualifiedByName = "sexCodeToDescription")
+    @Mapping(target = "counterDto", source = "counters", qualifiedByName = "mapToUserCounters")
+    @Mapping(target = "personalDto", source = "userPersonal", qualifiedByName = "mapToUserPersonalDto")
+    UserFullDto mapFromUserEntityToUserFullDto(UserEntity user);
+
     @Mapping(target = "sex", source = "from.sex", qualifiedByName = "mapSex")
     @Mapping(target = "photoBig", source = "from", qualifiedByName = "resolvePhotoUrl")
     @Mapping(target = "cityId", source = "from", qualifiedByName = "getCityId")
-    @Mapping(target = "counters", source = "from", qualifiedByName = "mapToUserCounters")
+    @Mapping(target = "counters", source = "from", qualifiedByName = "mapVkUserToUserCounters")
     @Mapping(target = "userPersonal", source = "from", qualifiedByName = "mapToUserPersonal")
     UserEntity mapFromVkUserToUserEntity(UserFull from, @MappingTarget UserEntity to);
 
@@ -38,17 +46,18 @@ public interface UserMapper {
     }
 
     @Named("sexCodeToDescription")
-    default String sexCodeToDescription(int sex) {
-        for (UserSex value : UserSex.values()) {
-            if (value.getCode() == sex) {
-                return value.getDescription();
-            }
-        }
-        return UserSex.GENDER_IS_NOT_SPECIFIED.getDescription();
+    default String sexCodeToDescription(Integer sex) {
+        String description = enumCodeToDescription(
+                sex,
+                UserSex.values(),
+                UserSex::getCode,
+                UserSex::getDescription
+        );
+        return description != null ? description : UserSex.GENDER_IS_NOT_SPECIFIED.getDescription();
     }
 
-    @Named("mapToUserCounters")
-    default UserCountersEntity mapToUserCounters(UserFull vkUser) {
+    @Named("mapVkUserToUserCounters")
+    default UserCountersEntity mapVkUserToUserCounters(UserFull vkUser) {
         UserCounters vkCounters = vkUser.getCounters();
         if (vkCounters == null) {
             return null;
@@ -68,6 +77,25 @@ public interface UserMapper {
         return counters;
     }
 
+    @Named("mapToUserCounters")
+    default UserCounterDto mapToUserCounters(UserCountersEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return UserCounterDto.builder()
+                .albums(entity.getAlbums())
+                .audios(entity.getAudios())
+                .followers(entity.getFollowers())
+                .friends(entity.getFriends())
+                .gifts(entity.getGifts())
+                .groups(entity.getGroups())
+                .pages(entity.getPages())
+                .photos(entity.getPhotos())
+                .videos(entity.getVideos())
+                .clipsFollowers(entity.getClipsFollowers())
+                .build();
+    }
+
     @Named("mapToUserPersonal")
     default UserPersonalEntity mapToUserPersonal(UserFull vkUser) {
         Personal vkPersonal = vkUser.getPersonal();
@@ -83,6 +111,71 @@ public interface UserMapper {
         personal.setSmoking(defaultInt(vkPersonal.getSmoking()));
         personal.setAlcohol(defaultInt(vkPersonal.getAlcohol()));
         return personal;
+    }
+
+    @Named("mapToUserPersonalDto")
+    default UserPersonalDto mapToUserPersonalDto(UserPersonalEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return UserPersonalDto.builder()
+                .inspiredBy(entity.getInspiredBy())
+                .political(politicalCodeToDescription(entity.getPolitical()))
+                .peopleMain(peopleMainCodeToDescription(entity.getPeopleMain()))
+                .lifeMain(lifeMainCodeToDescription(entity.getLifeMain()))
+                .smoking(smokingCodeToDescription(entity.getSmoking()))
+                .alcohol(alcoholCodeToDescription(entity.getAlcohol()))
+                .build();
+    }
+
+    @Named("politicalCodeToDescription")
+    default String politicalCodeToDescription(Integer code) {
+        return enumCodeToDescription(
+                code,
+                Political.values(),
+                Political::getId,
+                Political::getTitle
+        );
+    }
+
+    @Named("peopleMainCodeToDescription")
+    default String peopleMainCodeToDescription(Integer code) {
+        return enumCodeToDescription(
+                code,
+                PeopleMain.values(),
+                PeopleMain::getId,
+                PeopleMain::getTitle
+        );
+    }
+
+    @Named("lifeMainCodeToDescription")
+    default String lifeMainCodeToDescription(Integer code) {
+        return enumCodeToDescription(
+                code,
+                LifeMain.values(),
+                LifeMain::getId,
+                LifeMain::getTitle
+        );
+    }
+
+    @Named("smokingCodeToDescription")
+    default String smokingCodeToDescription(Integer code) {
+        return enumCodeToDescription(
+                code,
+                Smoking.values(),
+                Smoking::getCode,
+                Smoking::getDescription
+        );
+    }
+
+    @Named("alcoholCodeToDescription")
+    default String alcoholCodeToDescription(Integer code) {
+        return enumCodeToDescription(
+                code,
+                Alcohol.values(),
+                Alcohol::getId,
+                Alcohol::getTitle
+        );
     }
 
     @Named("resolvePhotoUrl")
@@ -107,5 +200,22 @@ public interface UserMapper {
 
     default Long defaultLong(Long value) {
         return value != null ? value : 0L;
+    }
+
+    private <E extends Enum<E>> String enumCodeToDescription(
+            Integer code,
+            E[] values,
+            java.util.function.ToIntFunction<E> codeExtractor,
+            java.util.function.Function<E, String> descriptionExtractor
+    ) {
+        if (code == null) {
+            return null;
+        }
+        for (E value : values) {
+            if (codeExtractor.applyAsInt(value) == code) {
+                return descriptionExtractor.apply(value);
+            }
+        }
+        return null;
     }
 }

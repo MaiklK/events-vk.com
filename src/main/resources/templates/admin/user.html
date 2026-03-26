@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Пользователь</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .avatar-max {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .avatar-wrapper {
+            max-width: 400px;
+        }
+
+        .badge-status {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column h-100">
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white mb-0" href="/admin">Админка</a>
+        <form th:action="@{/logout}" method="GET" class="mb-0">
+            <button type="submit" class="btn btn-dark text-secondary">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<main class="flex-shrink-0">
+    <div class="container mt-3" id="userPageRoot" th:data-user-id="${userId}">
+        <h1 class="m-3 fw-bold">Пользователь <span id="userIdTitle"></span></h1>
+
+        <div id="userError" class="alert alert-danger d-none" role="alert"></div>
+
+        <div id="userLoading" class="text-center my-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+
+        <div id="userContent" class="d-none">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="avatar-wrapper mx-auto mb-3" id="avatarWrapper"></div>
+                            <h4 id="userName" class="mb-2"></h4>
+                            <p class="mb-1"><strong>ID:</strong> <span id="userId"></span></p>
+                            <p class="mb-1" id="userAgeRow" style="display:none;">
+                                <strong>Возраст:</strong> <span id="userAge"></span>
+                            </p>
+                            <p class="mb-1" id="userBirthdayRow" style="display:none;">
+                                <strong>Дата рождения:</strong> <span id="userBirthday"></span>
+                            </p>
+                            <p class="mb-1" id="userSexRow" style="display:none;">
+                                <strong>Пол:</strong> <span id="userSex"></span>
+                            </p>
+                            <p class="mb-1" id="userCityRow" style="display:none;">
+                                <strong>Город:</strong> <span id="userCity"></span>
+                            </p>
+                            <p class="mt-2">
+                                <span id="userStatus" class="badge badge-status"></span>
+                            </p>
+                            <button id="banBtn" type="button" class="btn mt-2"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card mb-3" id="countersCard" style="display:none;">
+                        <div class="card-header">
+                            Счётчики
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterFriends" style="display:none;">
+                                    <strong>Друзья:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterFollowers" style="display:none;">
+                                    <strong>Подписчики:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterPhotos" style="display:none;">
+                                    <strong>Фотографии:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterVideos" style="display:none;">
+                                    <strong>Видео:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterAudios" style="display:none;">
+                                    <strong>Аудио:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterGroups" style="display:none;">
+                                    <strong>Группы:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterPages" style="display:none;">
+                                    <strong>Страницы:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterAlbums" style="display:none;">
+                                    <strong>Альбомы:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterGifts" style="display:none;">
+                                    <strong>Подарки:</strong> <span></span>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 mb-2" id="counterClipsFollowers" style="display:none;">
+                                    <strong>Подписчики клипов:</strong> <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="personalCard" style="display:none;">
+                        <div class="card-header">
+                            Личные взгляды
+                        </div>
+                        <div class="card-body">
+                            <p id="personalInspiredBy" style="display:none;"><strong>Вдохновляет:</strong> <span></span></p>
+                            <p id="personalPolitical" style="display:none;"><strong>Политические взгляды:</strong> <span></span></p>
+                            <p id="personalPeopleMain" style="display:none;"><strong>Главное в людях:</strong> <span></span></p>
+                            <p id="personalLifeMain" style="display:none;"><strong>Главное в жизни:</strong> <span></span></p>
+                            <p id="personalSmoking" style="display:none;"><strong>Отношение к курению:</strong> <span></span></p>
+                            <p id="personalAlcohol" style="display:none;"><strong>Отношение к алкоголю:</strong> <span></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const ADMIN_API_BASE = '/api/v1/admin';
+
+    function calculateAge(birthdayDate) {
+        if (!birthdayDate) return null;
+        const parts = birthdayDate.split(/[.:-]/);
+        if (parts.length < 3) return null;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+
+        const today = new Date();
+        let age = today.getFullYear() - year;
+        const birthdayThisYear = new Date(today.getFullYear(), month, day);
+        if (today < birthdayThisYear) age--;
+        return (age >= 0 && age <= 120) ? age : null;
+    }
+
+    function setTextOrHide(rowId, spanId, value) {
+        const row = document.getElementById(rowId);
+        const span = document.getElementById(spanId);
+        if (!row || !span) return;
+        if (value === null || value === undefined || value === '') {
+            row.style.display = 'none';
+        } else {
+            span.textContent = value;
+            row.style.display = '';
+        }
+    }
+
+    function setCounter(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (value === null || value === undefined) return;
+        const num = Number(value);
+        if (isNaN(num) || num <= 0) return;
+        el.style.display = '';
+        el.querySelector('span').textContent = num;
+    }
+
+    function setPersonal(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (!value) return;
+        el.style.display = '';
+        el.querySelector('span').textContent = value;
+    }
+
+    async function loadUser() {
+        const root = document.getElementById('userPageRoot');
+        const userId = root ? root.getAttribute('data-user-id') : null;
+        if (!userId) return;
+
+        document.getElementById('userIdTitle').textContent = userId;
+
+        const loading = document.getElementById('userLoading');
+        const content = document.getElementById('userContent');
+        const errorEl = document.getElementById('userError');
+
+        loading.classList.remove('d-none');
+        content.classList.add('d-none');
+        errorEl.classList.add('d-none');
+
+        try {
+            const resp = await fetch(`${ADMIN_API_BASE}/users/${userId}`);
+            if (!resp.ok) {
+                throw new Error(`Ошибка загрузки: ${resp.status}`);
+            }
+            const user = await resp.json();
+
+            loading.classList.add('d-none');
+            content.classList.remove('d-none');
+
+            const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ');
+            document.getElementById('userName').textContent = fullName || '';
+            document.getElementById('userId').textContent = user.userVkId ?? user.id ?? user.vkid ?? '';
+
+            const avatarWrapper = document.getElementById('avatarWrapper');
+            avatarWrapper.innerHTML = '';
+            if (user.photoBig) {
+                const img = document.createElement('img');
+                img.src = user.photoBig;
+                img.alt = 'аватарка';
+                img.className = 'avatar-max img-fluid rounded';
+                img.loading = 'lazy';
+                avatarWrapper.appendChild(img);
+            }
+
+            const age = calculateAge(user.birthdayDate);
+            if (age !== null) {
+                setTextOrHide('userAgeRow', 'userAge', age.toString());
+            } else {
+                document.getElementById('userAgeRow').style.display = 'none';
+            }
+            setTextOrHide('userBirthdayRow', 'userBirthday', user.birthdayDate);
+
+            setTextOrHide('userSexRow', 'userSex', user.sex);
+            setTextOrHide('userCityRow', 'userCity', user.city);
+
+            const isBanned = user.banned === true || user.locked === true || user.enabled === false || user.isLocked === true;
+            const statusEl = document.getElementById('userStatus');
+            const banBtn = document.getElementById('banBtn');
+
+            if (isBanned) {
+                statusEl.className = 'badge badge-status bg-danger';
+                statusEl.textContent = 'Заблокирован';
+                banBtn.className = 'btn btn-success mt-2';
+                banBtn.textContent = 'Разблокировать';
+                banBtn.dataset.action = 'unban';
+            } else {
+                statusEl.className = 'badge badge-status bg-success';
+                statusEl.textContent = 'Активен';
+                banBtn.className = 'btn btn-danger mt-2';
+                banBtn.textContent = 'Заблокировать';
+                banBtn.dataset.action = 'ban';
+            }
+            banBtn.dataset.userId = user.userVkId ?? user.id ?? user.vkid ?? userId;
+
+            if (user.counterDto) {
+                document.getElementById('countersCard').style.display = '';
+                setCounter('counterFriends', user.counterDto.friends);
+                setCounter('counterFollowers', user.counterDto.followers);
+                setCounter('counterPhotos', user.counterDto.photos);
+                setCounter('counterVideos', user.counterDto.videos);
+                setCounter('counterAudios', user.counterDto.audios);
+                setCounter('counterGroups', user.counterDto.groups);
+                setCounter('counterPages', user.counterDto.pages);
+                setCounter('counterAlbums', user.counterDto.albums);
+                setCounter('counterGifts', user.counterDto.gifts);
+                setCounter('counterClipsFollowers', user.counterDto.clipsFollowers);
+            } else {
+                document.getElementById('countersCard').style.display = 'none';
+            }
+
+            if (user.personalDto) {
+                document.getElementById('personalCard').style.display = '';
+                setPersonal('personalInspiredBy', user.personalDto.inspiredBy);
+                setPersonal('personalPolitical', user.personalDto.political);
+                setPersonal('personalPeopleMain', user.personalDto.peopleMain);
+                setPersonal('personalLifeMain', user.personalDto.lifeMain);
+                setPersonal('personalSmoking', user.personalDto.smoking);
+                setPersonal('personalAlcohol', user.personalDto.alcohol);
+            } else {
+                document.getElementById('personalCard').style.display = 'none';
+            }
+
+        } catch (e) {
+            console.error(e);
+            loading.classList.add('d-none');
+            errorEl.textContent = 'Не удалось загрузить данные пользователя.';
+            errorEl.classList.remove('d-none');
+        }
+    }
+
+    async function performBanAction(userId, action) {
+        const url = `${ADMIN_API_BASE}/users/${userId}/${action === 'ban' ? 'ban' : 'unban'}`;
+        try {
+            const resp = await fetch(url, {
+                method: 'PATCH',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!resp.ok) {
+                throw new Error(`Ошибка: ${resp.status}`);
+            }
+            await loadUser();
+        } catch (e) {
+            console.error(e);
+            alert(`Не удалось ${action === 'ban' ? 'заблокировать' : 'разблокировать'} пользователя.`);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadUser();
+
+        const banBtn = document.getElementById('banBtn');
+        banBtn.addEventListener('click', async () => {
+            const action = banBtn.dataset.action;
+            const userId = banBtn.dataset.userId;
+            if (!action || !userId) return;
+            const confirmText = action === 'ban'
+                ? `Вы действительно хотите заблокировать пользователя ID = ${userId}?`
+                : `Вы действительно хотите разблокировать пользователя ID = ${userId}?`;
+            if (confirm(confirmText)) {
+                await performBanAction(userId, action);
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

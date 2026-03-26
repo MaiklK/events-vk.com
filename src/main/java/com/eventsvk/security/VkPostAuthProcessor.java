@@ -4,11 +4,10 @@ import com.eventsvk.entity.AccessTokenEntity;
 import com.eventsvk.entity.user.RoleEntity;
 import com.eventsvk.entity.user.UserEntity;
 import com.eventsvk.mapper.UserMapper;
+import com.eventsvk.services.AdminService;
 import com.eventsvk.services.VkPostAuthService;
-import com.eventsvk.services.model.CityService;
 import com.eventsvk.services.model.RoleService;
 import com.eventsvk.services.model.UserService;
-import com.eventsvk.util.ExtractUtil;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +27,16 @@ import static com.eventsvk.constant.SecurityConstant.ROLE_USER;
 @RequiredArgsConstructor
 public class VkPostAuthProcessor {
     private final UserService userService;
+    private final AdminService adminService;
     private final UserMapper userMapper;
     private final RoleService roleService;
-    private final CityService cityService;
     private final VkPostAuthService vkPostAuthService;
 
     @Async(VK_POST_OAUTH_SAVE)
     public void saveUserAfterAuthorization(OAuth2User oAuth2User, OAuth2AccessToken accessToken) {
         Long userVkId = extractUserVkId(oAuth2User);
 
-        GetResponse vkUser = userService.getUserInfo(userVkId, accessToken.getTokenValue());
-
-        upsertCityIfPresent(vkUser);
+        GetResponse vkUser = adminService.getUserInfo(userVkId, accessToken.getTokenValue());
 
         UserEntity userEntity = buildOrUpdateUserEntity(userVkId, vkUser);
 
@@ -58,7 +55,7 @@ public class VkPostAuthProcessor {
     }
 
     private UserEntity buildOrUpdateUserEntity(Long userVkId, GetResponse vkUser) {
-        var existingUser = userService.findById(userVkId);
+        var existingUser = userService.findUserByIdOrGetFromCache(userVkId);
         if (existingUser.isEmpty()) {
             var newUser = new UserEntity();
             newUser.setRoles(Set.of(getDefaultUserRole()));
@@ -69,7 +66,7 @@ public class VkPostAuthProcessor {
     }
 
     private RoleEntity getDefaultUserRole() {
-        return roleService.getRoleByName(ROLE_USER);
+        return roleService.findRoleByNameOrGetFromCache(ROLE_USER);
     }
 
     private AccessTokenEntity buildAccessTokenEntity(Long userVkId, String tokenValue) {
@@ -79,15 +76,5 @@ public class VkPostAuthProcessor {
                 .isInUse(false)
                 .isValid(true)
                 .build();
-    }
-
-    private void upsertCityIfPresent(GetResponse vkUser) {
-        Optional.ofNullable(vkUser)
-                .map(GetResponse::getCity)
-                .ifPresent(city -> {
-                    Long cityId = ExtractUtil.extractLong(city.getId());
-                    String title = city.getTitle();
-                    cityService.upsertCity(cityId, title);
-                });
     }
 }

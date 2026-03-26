@@ -35,7 +35,7 @@ spring:
 security:
   jwt:
     secret: ${JWT_SECRET_BASE64}
-    expiration-seconds: 3600
+    expiration-seconds: 43200
 
 server:
   port: 80

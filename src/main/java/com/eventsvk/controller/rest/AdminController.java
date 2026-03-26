@@ -1,7 +1,8 @@
 package com.eventsvk.controller.rest;
 
-import com.eventsvk.dto.UserDto;
-import com.eventsvk.services.model.AdminService;
+import com.eventsvk.dto.user.UserDto;
+import com.eventsvk.dto.user.UserFullDto;
+import com.eventsvk.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +14,9 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    @GetMapping("/users/{userId}")
-    public UserDto getUser(@PathVariable Long userId) {
-        return adminService.getUserById(userId);
+    @GetMapping("users/{userid}")
+    public UserFullDto getUserFull(@PathVariable Long userid) {
+        return adminService.getFullUserById(userid);
     }
 
     @GetMapping("/users")
