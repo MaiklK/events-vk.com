@@ -8,9 +8,7 @@ select CAST('${BOOTSTRAP_ADMIN_VK_ID}' AS BIGINT), false, false, 2
 where not exists (
     select 1 from public.vk_users
     where user_vk_id = CAST('${BOOTSTRAP_ADMIN_VK_ID}' AS BIGINT)
-)
--- Не выполняем, если переменная не задана или пустая
-  and '${BOOTSTRAP_ADMIN_VK_ID}' == '';
+);
 
 -- Выдача ролей (только для реального админа)
 insert into public.id_role (user_id, role_id)
