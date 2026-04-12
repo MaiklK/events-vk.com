@@ -2,14 +2,14 @@ package com.eventsvk.services.model;
 
 import com.eventsvk.entity.user.UserEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
 public interface UserService {
     Optional<UserEntity> findUserByIdOrGetFromCache(Long userVkId);
+
     void saveUser(UserEntity userEntity);
+
     /**
      * Возвращает страницу пользователей, отсортированных по id по возрастанию.
      *

@@ -19,11 +19,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final Cache<Long, Optional<UserEntity>> userCache;
+    private final Cache<Long, UserEntity> userCache;
 
     @Override
     public Optional<UserEntity> findUserByIdOrGetFromCache(Long userVkId) {
-        return userCache.get(userVkId, this::findUserById);
+        UserEntity cached = userCache.getIfPresent(userVkId);
+        if (cached != null) {
+            return Optional.of(cached);
+        }
+
+        Optional<UserEntity> findUser = findUserById(userVkId);
+
+        findUser.ifPresent(user -> userCache.put(userVkId, user));
+        return findUser;
     }
 
     public Optional<UserEntity> findUserById(Long userVkId) {
@@ -36,8 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserEntity userEntity) {
-        userRepository.save(userEntity);
-        log.debug("Пользователь с userVkId {} успешно сохранен", userEntity.getUserVkId());
+        UserEntity saved = userRepository.save(userEntity);
+        userCache.put(saved.getUserVkId(), saved);
+        log.debug("Пользователь с userVkId {} успешно сохранен и кэш обновлен", saved.getUserVkId());
     }
 
     @Override

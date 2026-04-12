@@ -9,12 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
-import java.util.Optional;
 
 @Configuration
 public class CacheConfig {
     @Bean
-    public Cache<Long, Optional<CityEntity>> cityCache() {
+    public Cache<Long, CityEntity> cityCache() {
         return Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(Duration.ofHours(24))
@@ -32,7 +31,7 @@ public class CacheConfig {
     }
 
     @Bean
-    public Cache<Long, Optional<UserEntity>> userCache() {
+    public Cache<Long, UserEntity> userCache() {
         return Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(Duration.ofHours(24))

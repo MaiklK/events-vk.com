@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/webjars/**", "/error").permitAll()
                         .requestMatchers(
                                 "/admin**",
+                                "/admin/**",
                                 "/api/v1/admin/**",
                                 "/api/v1/blacklist/**",
                                 "/api/v1/request/**",
