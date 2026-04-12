@@ -11,22 +11,32 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
-    private final Cache<Long, Optional<CityEntity>> cityCache;
+    private final Cache<Long, CityEntity> cityCache;
 
     @Override
     @Transactional
     public void upsertCity(Long id, String title) {
+        if (id == null || isBlank(title)) {
+            throw new IllegalArgumentException("ID города и название обязательны для заполнения и не могут быть null");
+        }
         cityRepository.upsertCity(id, title);
     }
 
     @Override
     public Optional<CityEntity> findCityByIdOrGetFromCache(Long cityId) {
-        return cityCache.get(cityId, key -> getCityById(cityId));
+        if (cityId == null) {
+            return Optional.empty();
+        }
+
+        CityEntity cached = cityCache.get(cityId, key -> getCityById(cityId).orElse(null));
+        return Optional.ofNullable(cached);
     }
 
     public Optional<CityEntity> getCityById(Long cityId) {

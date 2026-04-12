@@ -1,12 +1,15 @@
 package com.eventsvk.controller.rest;
 
 import com.eventsvk.services.model.BlackListService;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/v1/blacklist")
 @RequiredArgsConstructor
@@ -19,7 +22,7 @@ public class BlackListController {
     }
 
     @PostMapping
-    public void addToBlackList(Principal principal, @RequestBody List<String> userId) {
-        blackListService.addToBlackList(userId, principal.getName());
+    public void addToBlackList(Principal principal, @RequestBody @NotEmpty List<String> blackList) {
+        blackListService.addToBlackList(blackList, principal.getName());
     }
 }

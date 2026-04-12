@@ -3,6 +3,10 @@ insert into public.user_role (id, name)
 values (1, 'ROLE_USER'),
        (2, 'ROLE_ADMIN');
 
+-- Синхронизация sequence для предотвращения конфликта ID
+-- Hibernate будет использовать sequence для новых ролей
+SELECT setval('public.user_role_seq', (SELECT MAX(id) FROM public.user_role));
+
 -- Заполнение таблицы dic_request
 insert into public.dic_request (req)
 values 

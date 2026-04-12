@@ -11,7 +11,6 @@ import com.eventsvk.services.model.UserService;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.eventsvk.constant.AsyncExecutorName.VK_POST_OAUTH_SAVE;
 import static com.eventsvk.constant.SecurityConstant.ROLE_USER;
 
 @Slf4j
@@ -32,7 +30,7 @@ public class VkPostAuthProcessor {
     private final RoleService roleService;
     private final VkPostAuthService vkPostAuthService;
 
-    @Async(VK_POST_OAUTH_SAVE)
+    //    @Async(VK_POST_OAUTH_SAVE) TODO надо подумать как оптимизировать эту историю
     public void saveUserAfterAuthorization(OAuth2User oAuth2User, OAuth2AccessToken accessToken) {
         Long userVkId = extractUserVkId(oAuth2User);
 

@@ -37,6 +37,6 @@ public class UserCounterEntity {
     private Long clipsFollowers;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_vk_id", referencedColumnName = "user_vk_id")
+    @JoinColumn(name = "user_vk_id")
     private UserEntity user;
 }
