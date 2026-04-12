@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 31032026-fill-tables
+      author: MaiklK
+      changes:
+        - sqlFile:
+            path: db/changelog/31032026/fill-tables.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+            endDelimiter: ;
+            splitStatements: true
+            stripComments: true

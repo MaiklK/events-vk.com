@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      id: 31032026-create-tables
+      file: db/changelog/31032026/create-tables-changelog.yaml
+  - include:
+      id: 31032026-fill-tables
+      file: db/changelog/31032026/fill-tables-changelog.yaml
+  - include:
+      id: 31032026-fill-user-admin-changelog.yaml
+      file: db/changelog/31032026/fill-user-admin-changelog.yaml

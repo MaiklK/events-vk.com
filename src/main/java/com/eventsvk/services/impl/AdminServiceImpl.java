@@ -76,7 +76,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public UserDto getUserById(Long userId) {
-        return userMapper.mapFromUserEntityToUserDto(userService.findUserByIdOrGetFromCache(userId).orElseThrow(()
+        return userMapper.mapFromEntityToDto(userService.findUserByIdOrGetFromCache(userId).orElseThrow(()
                 -> new IllegalArgumentException("Пользователь с id=" + userId + " не найден")));
     }
 
@@ -85,7 +85,7 @@ public class AdminServiceImpl implements AdminService {
         UserEntity userEntity = userService.findUserByIdOrGetFromCache(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с id=" + userId + " не найден"));
 
-        UserFullDto userFullDto = userMapper.mapFromUserEntityToUserFullDto(userEntity);
+        UserFullDto userFullDto = userMapper.mapFromEntityToUserFullDto(userEntity);
 
         if (userEntity.getCityId() != null) {
             cityService.findCityByIdOrGetFromCache(userEntity.getCityId())
@@ -99,7 +99,7 @@ public class AdminServiceImpl implements AdminService {
     public List<UserDto> getAllUsers(int page, int size) {
         Page<UserEntity> usersPage = userService.findAllSortedById(page, size);
         return usersPage.getContent().stream()
-                .map(userMapper::mapFromUserEntityToUserDto)
+                .map(userMapper::mapFromEntityToDto)
                 .collect(Collectors.toList());
     }
 

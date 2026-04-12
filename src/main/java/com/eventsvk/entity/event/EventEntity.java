@@ -1,4 +1,4 @@
-package com.eventsvk.entity;
+package com.eventsvk.entity.event;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;
@@ -14,8 +14,7 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Table(name = "events")
+@Table(name = "event")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventEntity implements Comparable<EventEntity> {

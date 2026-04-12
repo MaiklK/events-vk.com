@@ -4,7 +4,7 @@ import com.eventsvk.dto.user.UserCounterDto;
 import com.eventsvk.dto.user.UserDto;
 import com.eventsvk.dto.user.UserFullDto;
 import com.eventsvk.dto.user.UserPersonalDto;
-import com.eventsvk.entity.user.UserCountersEntity;
+import com.eventsvk.entity.user.UserCounterEntity;
 import com.eventsvk.entity.user.UserEntity;
 import com.eventsvk.entity.user.UserPersonalEntity;
 import com.eventsvk.enums.*;
@@ -19,19 +19,19 @@ import org.mapstruct.*;
 public interface UserMapper {
 
     @Mapping(target = "sex", source = "user.sex", qualifiedByName = "sexCodeToDescription")
-    UserDto mapFromUserEntityToUserDto(UserEntity user);
+    UserDto mapFromEntityToDto(UserEntity user);
 
     @Mapping(target = "sex", source = "sex", qualifiedByName = "sexCodeToDescription")
     @Mapping(target = "counterDto", source = "counters", qualifiedByName = "mapToUserCounters")
     @Mapping(target = "personalDto", source = "userPersonal", qualifiedByName = "mapToUserPersonalDto")
-    UserFullDto mapFromUserEntityToUserFullDto(UserEntity user);
+    UserFullDto mapFromEntityToUserFullDto(UserEntity user);
 
     @Mapping(target = "sex", source = "from.sex", qualifiedByName = "mapSex")
     @Mapping(target = "photoBig", source = "from", qualifiedByName = "resolvePhotoUrl")
     @Mapping(target = "cityId", source = "from", qualifiedByName = "getCityId")
     @Mapping(target = "counters", source = "from", qualifiedByName = "mapVkUserToUserCounters")
     @Mapping(target = "userPersonal", source = "from", qualifiedByName = "mapToUserPersonal")
-    UserEntity mapFromVkUserToUserEntity(UserFull from, @MappingTarget UserEntity to);
+    UserEntity mapFromVkUserToEntity(UserFull from, @MappingTarget UserEntity to);
 
     @Named("mapSex")
     default int mapSex(Sex sex) {
@@ -57,12 +57,12 @@ public interface UserMapper {
     }
 
     @Named("mapVkUserToUserCounters")
-    default UserCountersEntity mapVkUserToUserCounters(UserFull vkUser) {
+    default UserCounterEntity mapVkUserToUserCounters(UserFull vkUser) {
         UserCounters vkCounters = vkUser.getCounters();
         if (vkCounters == null) {
             return null;
         }
-        UserCountersEntity counters = new UserCountersEntity();
+        UserCounterEntity counters = new UserCounterEntity();
         counters.setUserVkId(vkUser.getId());
         counters.setAlbums(defaultInt(vkCounters.getAlbums()));
         counters.setAudios(defaultInt(vkCounters.getAudios()));
@@ -78,7 +78,7 @@ public interface UserMapper {
     }
 
     @Named("mapToUserCounters")
-    default UserCounterDto mapToUserCounters(UserCountersEntity entity) {
+    default UserCounterDto mapToUserCounters(UserCounterEntity entity) {
         if (entity == null) {
             return null;
         }

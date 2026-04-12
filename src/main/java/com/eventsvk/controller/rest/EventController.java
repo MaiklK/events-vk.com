@@ -2,7 +2,7 @@ package com.eventsvk.controller.rest;
 
 import com.eventsvk.dto.EventDto;
 import com.eventsvk.entity.AccessTokenEntity;
-import com.eventsvk.services.SearchEventService;
+import com.eventsvk.services.model.SearchEventService;
 import com.eventsvk.services.model.AccessTokenService;
 import com.eventsvk.util.ExtractUtil;
 import lombok.RequiredArgsConstructor;

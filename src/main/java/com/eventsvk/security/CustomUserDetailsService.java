@@ -2,6 +2,7 @@ package com.eventsvk.security;
 
 import com.eventsvk.entity.user.UserEntity;
 import com.eventsvk.services.model.UserService;
+import com.eventsvk.util.ExtractUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         long userVkId;
         try {
-            userVkId = Long.parseLong(username);
+            userVkId = ExtractUtil.extractLong(username);
         } catch (NumberFormatException ex) {
             throw new UsernameNotFoundException("Некорректный формат username (ожидался VK ID): " + username);
         }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.events</groupId>
     <artifactId>events-vk.com</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <name>events-vk.com</name>
     <description>Event from vk.com</description>
     <properties>
@@ -52,6 +52,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
         </dependency>
 
         <!--    Кеш -->
@@ -124,6 +129,13 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Сериализация-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.12.1</version>
         </dependency>
 
     </dependencies>
