@@ -60,9 +60,9 @@ public class VkPostAuthProcessor {
             var newUser = new UserEntity();
             newUser.setRoles(Set.of(getDefaultUserRole()));
             newUser.setIsLocked(Boolean.TRUE.equals(newUser.getIsLocked()));
-            return userMapper.mapFromVkUserToUserEntity(vkUser, newUser);
+            return userMapper.mapFromVkUserToEntity(vkUser, newUser);
         }
-        return userMapper.mapFromVkUserToUserEntity(vkUser, existingUser.get());
+        return userMapper.mapFromVkUserToEntity(vkUser, existingUser.get());
     }
 
     private RoleEntity getDefaultUserRole() {

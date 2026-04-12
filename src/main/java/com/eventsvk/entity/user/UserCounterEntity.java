@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_counters")
-public class UserCountersEntity {
+@Table(name = "user_counter")
+public class UserCounterEntity {
     @Id
     private Long userVkId;
     @Column

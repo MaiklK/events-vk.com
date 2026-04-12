@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 31032026-fill-user-admin
+      author: MaiklK
+      changes:
+        - sqlFile:
+            path: db/changelog/31032026/fill-user-admin.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+            endDelimiter: ;
+            splitStatements: true
+            stripComments: true
