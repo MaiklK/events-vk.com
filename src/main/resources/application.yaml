@@ -7,6 +7,8 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yaml
+    parameters:
+      BOOTSTRAP_ADMIN_VK_ID: ${BOOTSTRAP_ADMIN_VK_ID:}
 
   jpa:
     open-in-view: false

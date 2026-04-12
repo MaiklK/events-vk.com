@@ -33,8 +33,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/webjars/**", "/error").permitAll()
-                        .requestMatchers("/admin**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1**").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/admin**",
+                                "/api/v1/admin/**",
+                                "/api/v1/blacklist/**",
+                                "/api/v1/request/**",
+                                "/api/v1/whitelist/**",
+                                "/api/v1/allowedCity/add"
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

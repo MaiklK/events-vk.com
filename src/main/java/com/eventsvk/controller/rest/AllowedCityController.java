@@ -24,7 +24,7 @@ public class AllowedCityController {
         return allowedCityService.getAllAllowedCity();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public void addAllowedCity(Principal principal,
                         @RequestParam Long cityId,
                         @RequestParam Long countryId,
