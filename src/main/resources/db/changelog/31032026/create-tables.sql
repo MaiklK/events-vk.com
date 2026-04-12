@@ -1,15 +1,11 @@
 -- Создание последовательностей
 create sequence public.black_list_seq increment by 1;
-alter sequence public.black_list_seq owner to postgres;
 
 create sequence public.dic_request_seq increment by 1;
-alter sequence public.dic_request_seq owner to postgres;
 
 create sequence public.user_role_seq increment by 1;
-alter sequence public.user_role_seq owner to postgres;
 
 create sequence public.white_list_seq increment by 1;
-alter sequence public.white_list_seq owner to postgres;
 
 -- Создание таблицы access_token
 create table public.access_token
@@ -20,8 +16,6 @@ create table public.access_token
     token     varchar(255)
 );
 
-alter table public.access_token owner to postgres;
-
 -- Создание таблицы allowed_city
 create table public.allowed_city
 (
@@ -30,9 +24,6 @@ create table public.allowed_city
     country_id bigint
 );
 
-alter table public.allowed_city owner to postgres;
-
-
 -- Создание таблицы black_list
 create table public.black_list
 (
@@ -40,16 +31,12 @@ create table public.black_list
     name varchar(20) constraint uk8p2ejiir70sybu2spdc2ip2u9 unique
 );
 
-alter table public.black_list owner to postgres;
-
 -- Создание таблицы cities
 create table public.cities
 (
     id    bigint       not null primary key,
     title varchar(50) constraint uk_cities_title unique
 );
-
-alter table public.cities owner to postgres;
 
 create unique index idx_cities_title on public.cities (title);
 
@@ -59,8 +46,6 @@ create table public.dic_request
     id  integer      not null primary key DEFAULT nextval('dic_request_seq'),
     req varchar(50) constraint ukt67x7ldn5adc7wcqwvf7ytd5c unique
 );
-
-alter table public.dic_request owner to postgres;
 
 -- Создание таблицы event
 create table public.event
@@ -82,8 +67,6 @@ create table public.event
     status            varchar(50)
 );
 
-alter table public.event owner to postgres;
-
 -- Создание таблицы user_counter
 create table public.user_counter
 (
@@ -100,8 +83,6 @@ create table public.user_counter
     videos           integer
 );
 
-alter table public.user_counter owner to postgres;
-
 -- Создание таблицы user_personal
 create table public.user_personal
 (
@@ -113,8 +94,6 @@ create table public.user_personal
     political   integer,
     smoking     integer
 );
-
-alter table public.user_personal owner to postgres;
 
 -- Создание таблицы vk_users
 create table public.vk_users
@@ -132,16 +111,12 @@ create table public.vk_users
     sex           integer
 );
 
-alter table public.vk_users owner to postgres;
-
 -- Создание таблицы user_role (справочник ролей)
 create table public.user_role
 (
     id   bigint       not null primary key,
     name varchar(50)  not null unique
 );
-
-alter table public.user_role owner to postgres;
 
 -- Создание таблицы id_role (связь пользователь-роль)
 create table public.id_role
@@ -151,13 +126,9 @@ create table public.id_role
     primary key (user_id, role_id)
 );
 
-alter table public.id_role owner to postgres;
-
 -- Создание таблицы white_list
 create table public.white_list
 (
     id   bigint       not null primary key DEFAULT nextval('white_list_seq'),
     name varchar(50)
 );
-
-alter table public.white_list owner to postgres;
